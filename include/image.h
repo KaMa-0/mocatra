@@ -1,12 +1,16 @@
 /**
- * \file    image.h
- * \ brief  Utility for writing PPM Images
+ *
+ *  \file   image.h
+ *  \brief  Utility for writing PPM Images
+ *
  */
 
 /*
- * Author:  KaMa (https://github.com/KaMa-0/
- *                https://gitlab.com/KaMa-0/)
+ *  Author:  KaMa (https://github.com/KaMa-0/
+ *                 https://gitlab.com/KaMa-0/)
+ *
  */
+
 
 #ifndef _IMAGE_H
 #define _IMAGE_H
