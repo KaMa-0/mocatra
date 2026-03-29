@@ -15,6 +15,10 @@
 #ifndef _VEC3_H
 #define _VEC3_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 
 typedef struct vec3 {
         double x, y, z;
@@ -31,5 +35,10 @@ static inline double vec3_dot(vec3_t u, vec3_t v);
 static inline vec3_t vec3_cross(vec3_t u, vec3_t v);
 
 static inline vec3_t vec3_cmpnt_mult(vec3_t u, vec3_t v);
+
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* _VEC3_H */
