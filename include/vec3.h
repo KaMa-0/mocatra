@@ -1,7 +1,7 @@
 /**
  *
  *  \file   vec3.h
- *  \brief  Utility for writing PPM Images
+ *  \brief  Utilities for mathematical operations on vectors in 3d space.
  *
  */
 
