@@ -15,7 +15,7 @@ vec3_sub(vec3_t u, vec3_t v)
 }
 
 static inline vec3_t 
-vec3_scal(vec3_t u, double t)
+vec3_scal(vec3_t u, float t)
 {
         return (vec3_t){ u.x * t, u.y * t, u.z * t };
 }
@@ -26,7 +26,7 @@ vec3_neg(vec3_t u)
         return (vec3_t){ -u.x, -u.y, -u.z };
 }
 
-static inline double 
+static inline float 
 vec3_dot(vec3_t u, vec3_t v)
 {
         return u.x * v.x + u.y * v.y + u.z * v.z;
