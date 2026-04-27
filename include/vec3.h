@@ -25,6 +25,9 @@ typedef struct vec3 {
 } vec3_t;
 
 
+static inline float vec3_len_squared(vec3_t u);
+static inline float vec3_length(vec3_t u);
+
 vec3_t vec3_add(vec3_t u, vec3_t v);
 vec3_t vec3_sub(vec3_t u, vec3_t v);
 
@@ -35,6 +38,8 @@ float vec3_dot(vec3_t u, vec3_t v);
 vec3_t vec3_cross(vec3_t u, vec3_t v);
 
 vec3_t vec3_cmpnt_mult(vec3_t u, vec3_t v);
+
+vec3_t vec3_unit(vec3_t u);
 
 
 #ifdef __cplusplus
