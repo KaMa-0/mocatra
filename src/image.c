@@ -58,7 +58,7 @@ image_px_get(image_t* img, uint32_t x, uint32_t y)
         if (!image_is_valid(img))
                 return NULL;
         
-        if (x <= img->width || y <= img->height)
+        if (x >= img->width || y >= img->height)
                 return NULL;
 
         return &img->buffer[y * img->width + x];
@@ -70,7 +70,7 @@ image_px_set(image_t* img, uint32_t x, uint32_t y, pixel_t px)
         if (!image_is_valid(img))
                 return -1;
         
-        if (x > img->width || y > img->height)
+        if (x >= img->width || y >= img->height)
                 return -2;
 
         img->buffer[y * img->width + x] = px;
@@ -94,7 +94,17 @@ image_write_ppm(image_t* img, const char* path)
         fprintf(fp, "P6\n%u %u\n255\n", img->width, img->height);
 
         /* Write Pixel Data (binary) */
-        fwrite(img->buffer, sizeof(pixel_t), image_size(img), fp);
+        for (uint32_t i = 0; i < image_size(img); i++) {
+                pixel_t p = img->buffer[i];
+
+                unsigned char r = (unsigned char)(255.999f * p.r);
+                unsigned char g = (unsigned char)(255.999f * p.g);
+                unsigned char b = (unsigned char)(255.999f * p.b);
+                
+                fputc(r, fp);
+                fputc(g, fp);
+                fputc(b, fp);
+        }
 
         fclose(fp);
 
