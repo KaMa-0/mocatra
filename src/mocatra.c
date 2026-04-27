@@ -1,36 +1,123 @@
 #include <stdio.h>
 
+#include "viewport.h"
 #include "image.h"
+#include "vec3.h"
+#include "ray.h"
 
 
 int
 main(void) 
 {
-        image_t* img;
+        image_t* img; /* image containing image buffer */
+        pixel_t  px;  /* pixel containing r,g,b values */
+
+        ray_t    ray;           /* ray                          */
+        vec3_t   ray_direction; /* direction of ray in 3d space */
+
+        vec3_t   cam_center; /* 3d position of camera                       */
+        vec3_t   vp_origin;  /* 3d position of viewport origin              */
+        vec3_t   vp_u, vp_v; /* viewport vec from left to right edge (vp_u) */
+                             /* viewport vec from top to bottom edge (vp_v) */
+
+        vec3_t   px_origin; /* 3d position of pixel grid origin           */
+        vec3_t   px_center; /* 3d position of the center-point of a pixel */
+        vec3_t   px_delta_u, px_delta_v; /* pixel delta left to right (u) */
+                                         /* pixel delta top to bottom (v) */
+
+        char*    img_path; /* path to destination for final image render */
+
+        float    focal_length; /* camera focal length */
+        float    aspect_ratio; /* aspect ratio of the final image render */
+
+        float    vp_width,  vp_height;  /* viewport width and height       */
+        int      img_width, img_height; /* image width and height (min. 1) */
+
+
         printf("MOCATRA - Monte Carlo Tracer!\n");
+
+        /* ============= */
+        /* configuration */
+
+        img_path     = "test/background.ppm";
+        aspect_ratio = 16.0 / 9.0;
+        img_width    = 1920;
+
+        /* ============= */
         
-        img = image_create(1920, 1080);
+        /* Image */
+
+        img_height = (int)(img_width / aspect_ratio);
+        img_height = (img_height < 1) ? 1 : img_height;
+
+        img = image_create(img_width, img_height);
         if (img == NULL) {
                 printf("[ERROR] Failed to create image.\n");
         }
 
+        /* ----- */
+
+        /* Camera */
+
+        focal_length = 1.0;
+        cam_center   = (vec3_t){ 
+                .x = 0, 
+                .y = 0, 
+                .z = 0,
+        };
+
+        vp_height    = 2.0;
+        vp_width     = vp_height * ((double)(img_width) / img_height);
+
+        vp_u = (vec3_t){ 
+                .x = vp_width, 
+                .y = 0, 
+                .z = 0 
+        };
+        vp_v = (vec3_t){ 
+                .x = 0,
+                .y = -vp_height,
+                .z = 0
+        };
+
+        px_delta_u = vec3_scal(vp_u, (1.0f / (float)img_width));
+        px_delta_v = vec3_scal(vp_v, (1.0f / (float)img_height));
+
+        vp_origin = get_viewport_origin(cam_center, vp_u, vp_v, focal_length);
+
+        px_origin = get_pixel_origin(vp_origin, px_delta_u, px_delta_v);
+
+        /* ------ */
+
+        
+        /* Render */
+
         for (uint32_t y = 0; y < img->height; y++) {
                 for (uint32_t x = 0; x < img->width; x++) {
-                        pixel_t px;
-                        px.r = (uint8_t)(x * 255 / (img->width  - 1));
-                        px.g = (uint8_t)(y * 255 / (img->height - 1));
-                        px.b = 128;
+                        px_center = get_pixel_center(px_origin, 
+                                                     px_delta_u, px_delta_v,
+                                                     x, y);
+
+                        ray_direction = vec3_sub(px_center, cam_center);
+                        ray = (ray_t){ 
+                                .orig = cam_center,
+                                .dir  = ray_direction,
+                        };
+
+                        px = ray_color(ray);
                         image_px_set(img, x, y, px);
                 }
         }
 
-        if (image_write_ppm(img, "test/gradient.ppm") != 0) {
+        if (image_write_ppm(img, img_path) != 0) {
                 fprintf(stderr, "Failed to write image\n");
                 image_free(img);
                 return 1;
         }
 
         image_free(img);
+
+        /* ------ */
 
         return 0;
 }
