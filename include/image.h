@@ -24,13 +24,16 @@ extern "C" {
 
 
 typedef struct pixel {
-        uint8_t  r, g, b;
+        float r;
+        float g;
+        float b;
 } pixel_t;
 
 
 typedef struct image {
         pixel_t* buffer;
-        uint32_t width, height;
+        uint32_t width;
+        uint32_t height;
 } image_t;
 
 
