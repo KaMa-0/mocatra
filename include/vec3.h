@@ -15,6 +15,8 @@
 #ifndef _VEC3_H
 #define _VEC3_H
 
+#include <math.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */

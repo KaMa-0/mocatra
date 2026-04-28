@@ -39,7 +39,7 @@ main(void)
         /* ============= */
         /* configuration */
 
-        img_path     = "test/background.ppm";
+        img_path     = "test/circle.ppm";
         aspect_ratio = 16.0 / 9.0;
         img_width    = 1920;
 
