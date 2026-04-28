@@ -15,6 +15,8 @@
 #ifndef _VEC3_H
 #define _VEC3_H
 
+#include <math.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
@@ -25,8 +27,22 @@ typedef struct vec3 {
 } vec3_t;
 
 
-static inline float vec3_len_squared(vec3_t u);
-static inline float vec3_length(vec3_t u);
+/* helper functions for derivation of length needed for unit vector calc */
+
+static inline float
+vec3_len_squared(vec3_t u)
+{
+        return u.x * u.x + u.y * u.y + u.z * u.z;
+}
+
+static inline float
+vec3_length(vec3_t u)
+{
+        return sqrt(vec3_len_squared(u));
+}
+
+/* --------------------------------------------------------------------- */
+
 
 vec3_t vec3_add(vec3_t u, vec3_t v);
 vec3_t vec3_sub(vec3_t u, vec3_t v);

@@ -3,18 +3,6 @@
 
 #include "vec3.h"
 
-static inline float
-vec3_len_squared(vec3_t u)
-{
-        return u.x * u.x + u.y * u.y + u.z * u.z;
-}
-
-static inline float
-vec3_length(vec3_t u)
-{
-        return sqrt(vec3_len_squared(u));
-}
-
 vec3_t 
 vec3_add(vec3_t u, vec3_t v)
 {
