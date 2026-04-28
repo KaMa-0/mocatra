@@ -5,9 +5,9 @@
 
 
 const vec3_t 
-ray_at(const ray_t* r, float t)
+ray_at(const ray_t r, float t)
 {
-        return vec3_add(r->orig, vec3_scal(r->dir, t));
+        return vec3_add(r.orig, vec3_scal(r.dir, t));
 }
 
 pixel_t 
@@ -27,7 +27,7 @@ ray_color(ray_t r)
 
         t = hit_sphere(sphere_center, 0.5, r);
         if (t > 0.0) {
-                N = vec3_unit(vec3_sub(ray_at(&r, t), sphere_center));
+                N = vec3_unit(vec3_sub(ray_at(r, t), sphere_center));
                 return (pixel_t){
                         .r = 0.5 * (N.x + 1),
                         .g = 0.5 * (N.y + 1),

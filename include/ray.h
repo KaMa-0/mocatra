@@ -31,7 +31,7 @@ typedef struct ray {
 } ray_t;
 
 
-const vec3_t ray_at(const ray_t* r, float t);
+const vec3_t ray_at(const ray_t r, float t);
 
 pixel_t ray_color(const ray_t t);
 
