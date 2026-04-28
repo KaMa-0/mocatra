@@ -31,11 +31,11 @@ typedef struct ray {
 } ray_t;
 
 
-const vec3_t at(ray_t* r, float t);
+const vec3_t ray_at(const ray_t* r, float t);
 
 pixel_t ray_color(const ray_t t);
 
-uint8_t hit_sphere(const vec3_t center, float radius, const ray_t r);
+float hit_sphere(const vec3_t center, float radius, const ray_t r);
 
 
 #ifdef __cplusplus
