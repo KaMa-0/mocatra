@@ -49,19 +49,19 @@ float
 hit_sphere(const vec3_t center, float radius, const ray_t r)
 {
         vec3_t oc;
-        float a, b, c, discriminant;
+        float a, h, c, discriminant;
 
         oc = vec3_sub(center, r.orig);
 
-        a = vec3_dot(r.dir, r.dir);
-        b = -2.0 * vec3_dot(r.dir, oc);
-        c = vec3_dot(oc, oc) - (radius * radius);
+        a = vec3_len_squared(r.dir);
+        h = vec3_dot(r.dir, oc);
+        c = vec3_len_squared(oc) - radius * radius;
 
-        discriminant = b * b - 4 * a * c;
+        discriminant = h * h - a * c;
 
         if (discriminant < 0) {
                 return -1.0;
         } else {
-                return ((-b - sqrt(discriminant)) / (2.0 * a));
+                return ((h - sqrt(discriminant)) / a);
         }
 }
