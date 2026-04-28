@@ -44,18 +44,18 @@ vec3_length(vec3_t u)
 /* --------------------------------------------------------------------- */
 
 
-vec3_t vec3_add(vec3_t u, vec3_t v);
-vec3_t vec3_sub(vec3_t u, vec3_t v);
+vec3_t vec3_add(const vec3_t u, const vec3_t v);
+vec3_t vec3_sub(const vec3_t u, const vec3_t v);
 
-vec3_t vec3_scal(vec3_t u, float t);
-vec3_t vec3_neg(vec3_t u);
+vec3_t vec3_scal(const vec3_t u, float t);
+vec3_t vec3_neg(const vec3_t u);
 
-float vec3_dot(vec3_t u, vec3_t v);
-vec3_t vec3_cross(vec3_t u, vec3_t v);
+float vec3_dot(const vec3_t u, const vec3_t v);
+vec3_t vec3_cross(const vec3_t u, const vec3_t v);
 
-vec3_t vec3_cmpnt_mult(vec3_t u, vec3_t v);
+vec3_t vec3_cmpnt_mult(const vec3_t u, const vec3_t v);
 
-vec3_t vec3_unit(vec3_t u);
+vec3_t vec3_unit(const vec3_t u);
 
 
 #ifdef __cplusplus
