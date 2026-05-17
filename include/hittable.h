@@ -1,7 +1,7 @@
 /**
  *
  *  \file   hittable.h
- *  \brief  Abstract hittabl class for any object which a ray can "hit".
+ *  \brief  Abstract hittable class for any object which a ray can "hit".
  *
  */
 
