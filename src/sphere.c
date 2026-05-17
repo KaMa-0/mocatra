@@ -1,6 +1,8 @@
 #include <math.h>
 #include <stdlib.h>
 
+#include "mocatra.h"
+
 #include "sphere.h"
 
 static uint8_t
@@ -51,6 +53,16 @@ static const hittable_vtable_t sphere_vtable = {
         .hit     = sphere_hit,
         .destroy = sphere_destroy,
 };
+
+sphere_t* 
+sphere_create(void)
+{
+        sphere_t* s;
+        s = malloc(sizeof(sphere_t));
+        if (s == NULL)
+                printf("[ERROR] Memory Allocation failed for sphere_t\n");
+        return s;
+}
 
 void
 sphere_init(sphere_t* s, vec3_t center, float radius)

@@ -29,6 +29,8 @@ typedef struct hittable_list {
     int             capacity;
 } hittable_list_t;
 
+hittable_list_t* hittable_list_create(void);
+
 void hittable_list_init(hittable_list_t* list, int initial_capacity);
 void hittable_list_add(hittable_list_t* list, hittable_t* object);
 void hittable_list_cleanup(hittable_list_t* list);

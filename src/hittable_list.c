@@ -1,5 +1,7 @@
 #include <stdlib.h>
 
+#include "mocatra.h"
+
 #include "hittable_list.h"
 
 static uint8_t
@@ -29,6 +31,16 @@ hittable_list_hit(const hittable_t* self, const ray_t r,
 }
 
 static const hittable_vtable_t list_vtable = { .hit = hittable_list_hit };
+
+hittable_list_t*
+hittable_list_create(void)
+{
+        hittable_list_t* hl;
+        hl = malloc(sizeof(hittable_list_t));
+        if (hl == NULL)
+                printf("[ERROR] Memory Allocation failed for hittable_list.\n");
+        return hl;
+}
 
 void 
 hittable_list_init(hittable_list_t* list, int initial_capacity)

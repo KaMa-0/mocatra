@@ -1,7 +1,10 @@
 #include <math.h>
 
 
+#include "mocatra.h"
+
 #include "ray.h"
+#include "hittable.h"
 
 
 const vec3_t 
@@ -11,29 +14,20 @@ ray_at(const ray_t r, float t)
 }
 
 pixel_t 
-ray_color(ray_t r)
+ray_color(ray_t r, const hittable_t* world)
 {
-        vec3_t N;
-        vec3_t unit_direction;
-        vec3_t sphere_center;
-        float  gradient;
-        float  t;
+        hit_record_t    rec;
+        vec3_t          unit_direction;
+        float           gradient;
 
-        sphere_center = (vec3_t){ 
-                .x =  0, 
-                .y =  0, 
-                .z = -1,
-        };
-
-        t = hit_sphere(sphere_center, 0.5, r);
-        if (t > 0.0) {
-                N = vec3_unit(vec3_sub(ray_at(r, t), sphere_center));
+        if (world->vtable->hit(world, r, 0.001f, INF, &rec)) {
                 return (pixel_t){
-                        .r = 0.5 * (N.x + 1),
-                        .g = 0.5 * (N.y + 1),
-                        .b = 0.5 * (N.z + 1),
+                        .r = 0.5 * (rec.normal.x + 1),
+                        .g = 0.5 * (rec.normal.y + 1),
+                        .b = 0.5 * (rec.normal.z + 1),
                 };
         }
+        
 
         unit_direction = vec3_unit(r.dir);
         gradient = 0.5 * (unit_direction.y + 1.0);
