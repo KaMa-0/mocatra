@@ -53,5 +53,18 @@ hittable_list_add(hittable_list_t* list, hittable_t* object)
 void 
 hittable_list_cleanup(hittable_list_t* list)
 {
+        if (list == NULL) return;
+
+        for (int i = 0; i < list->size; ++i) {
+                if (list->objects[i]->vtable->destroy) {
+                        list->objects[i]->vtable->destroy(list->objects[i]);
+                }
+        }
+
+        free(list->objects);
+    
+        list->objects = NULL;
+        list->size = 0;
+        list->capacity = 0;
 }
 

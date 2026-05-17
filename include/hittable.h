@@ -35,8 +35,9 @@ typedef struct hit_record {
 typedef struct hittable hittable_t;
 
 typedef struct hittable_vtable {
-    uint8_t (*hit)(const hittable_t* self, const ray_t r, 
-                   float t_min, float t_max, hit_record_t* rec);
+    uint8_t (*hit) (const hittable_t* self, const ray_t r, 
+                    float t_min, float t_max, hit_record_t* rec);
+    void (*destroy)(hittable_t* self);
 } hittable_vtable_t;
 
 struct hittable {
