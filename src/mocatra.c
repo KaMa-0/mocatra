@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#include "mocatra.h"
+
 #include "viewport.h"
 #include "image.h"
 #include "vec3.h"
