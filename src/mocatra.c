@@ -1,9 +1,16 @@
 #include <stdio.h>
+#include <stdlib.h>
+
+#include "mocatra.h"
 
 #include "viewport.h"
 #include "image.h"
 #include "vec3.h"
 #include "ray.h"
+
+#include "hittable.h"
+#include "hittable_list.h"
+#include "sphere.h"
 
 
 int
@@ -11,6 +18,11 @@ main(void)
 {
         image_t* img; /* image containing image buffer */
         pixel_t  px;  /* pixel containing r,g,b values */
+
+        hittable_list_t* world;          /* world containing list of objects */
+        sphere_t*        ground;         /* big sphere serving as ground     */
+        sphere_t*        sphere_main;    /* main sphere of scene             */
+        vec3_t           sphere_center;  /* center vector for scene spheres  */
 
         ray_t    ray;           /* ray                          */
         vec3_t   ray_direction; /* direction of ray in 3d space */
@@ -39,7 +51,7 @@ main(void)
         /* ============= */
         /* configuration */
 
-        img_path     = "test/circle.ppm";
+        img_path     = "test/circle_with_ground.ppm";
         aspect_ratio = 16.0 / 9.0;
         img_width    = 1920;
 
@@ -89,6 +101,31 @@ main(void)
 
         /* ------ */
 
+
+        /* World */
+
+        world           = hittable_list_create();
+        ground          = sphere_create();
+        sphere_main     = sphere_create();
+
+        hittable_list_init(world, 3);
+        sphere_center = (vec3_t){
+                .x = 0,
+                .y = -100.5,
+                .z = -1,
+        };
+        sphere_init(ground, sphere_center, 100);
+        sphere_center = (vec3_t){
+                .x = 0,
+                .y = 0,
+                .z = -1,
+        };
+        sphere_init(sphere_main, sphere_center, 0.5);
+        hittable_list_add(world, (hittable_t*)ground);
+        hittable_list_add(world, (hittable_t*)sphere_main);
+
+        /* ----- */
+
         
         /* Render */
 
@@ -104,7 +141,7 @@ main(void)
                                 .dir  = ray_direction,
                         };
 
-                        px = ray_color(ray);
+                        px = ray_color(ray, (hittable_t*)world);
                         image_px_set(img, x, y, px);
                 }
         }
@@ -115,9 +152,17 @@ main(void)
                 return 1;
         }
 
+        /* ------ */
+
+
+        /* Cleanup */
+
         image_free(img);
 
-        /* ------ */
+        hittable_list_cleanup(world);
+        free(world);
+
+        /* ------- */
 
         return 0;
 }
