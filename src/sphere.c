@@ -7,7 +7,7 @@ sphere_hit(const hittable_t* self, const ray_t r,
            float t_min, float t_max, hit_record_t* rec)
 {
         const sphere_t* s;
-        vec3_t          oc;
+        vec3_t          oc, outward_normal;
         float           a, h, c, discriminant, sqrtd, root;
 
         s = (const sphere_t*)self;
@@ -31,10 +31,11 @@ sphere_hit(const hittable_t* self, const ray_t r,
                         return 0; /* false */
         }
 
-        rec->t      = root;
-        rec->p      = ray_at(r, root);
-        rec->normal = vec3_scal(vec3_sub(rec->p, s->center), 
-                                (1.0f / s->radius));
+        rec->t         = root;
+        rec->p         = ray_at(r, root);
+        outward_normal = vec3_scal(vec3_sub(rec->p, s->center),
+                                   (1.0f / s->radius));
+        hit_record_set_face_normal(rec, r, outward_normal);
 
         return 1; /* true */
 }
