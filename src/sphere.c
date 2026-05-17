@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdlib.h>
 
 #include "sphere.h"
 
@@ -40,8 +41,15 @@ sphere_hit(const hittable_t* self, const ray_t r,
         return 1; /* true */
 }
 
+static void
+sphere_destroy(hittable_t* self)
+{
+        free(self);
+}
+
 static const hittable_vtable_t sphere_vtable = { 
-        .hit = sphere_hit 
+        .hit     = sphere_hit,
+        .destroy = sphere_destroy,
 };
 
 void
