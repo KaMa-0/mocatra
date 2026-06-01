@@ -144,7 +144,24 @@ main(void)
                         px = ray_color(ray, (hittable_t*)world);
                         image_px_set(img, x, y, px);
                 }
+
+                /* progress indicator */
+                printf("\rRendering: ["); // Added \r back to fix line spam
+                for (int i = 0; i < 50; i++) {
+                        if (i < (int)(50 * ((float)(y + 1) / img->height))) {
+                                printf("=");
+                        } else if (i == (int)(50 * ((float)(y + 1) / img->height))) {
+                                printf(">");
+                        } else {
+                                printf(" ");
+                        }
+                }
+                printf("] %3d%%", (int)(((float)(y + 1) / img->height) * 100));
+                fflush(stdout);
         }
+
+        printf("\n\nRender Complete!\nSaving image ... \n");
+
 
         if (image_write_ppm(img, img_path) != 0) {
                 fprintf(stderr, "Failed to write image\n");
