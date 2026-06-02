@@ -26,6 +26,16 @@ random_float(float min, float max)
 }
 
 static inline vec3_t
+random_vec3_t(float min, float max)
+{
+        return (vec3_t){
+            .x = random_float(min, max),
+            .y = random_float(min, max),
+            .z = random_float(min, max),
+        };
+}
+
+static inline vec3_t
 sample_square(void)
 {
         return (vec3_t){
