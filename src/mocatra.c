@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "mocatra.h"
 
@@ -37,6 +38,11 @@ main(void)
         vec3_t   px_delta_u, px_delta_v; /* pixel delta left to right (u) */
                                          /* pixel delta top to bottom (v) */
 
+        vec3_t   accumulated_color; /* contains sub pixel color accumulation */
+        vec3_t   offset;            /* random offset within sample square    */
+        vec3_t   sample_pixel_loc;  /* sample coordinate on viewport grid    */
+        vec3_t   sample_col;        /* color of single sample                */
+
         char*    img_path; /* path to destination for final image render */
 
         float    focal_length; /* camera focal length */
@@ -45,17 +51,27 @@ main(void)
         float    vp_width,  vp_height;  /* viewport width and height       */
         int      img_width, img_height; /* image width and height (min. 1) */
 
+        float    pixel_samples_scale;   /* scale factor maps sum to 0.0-1.0 */
+        int      samples_per_px;        /* number of samples per pixel      */
+
 
         printf("MOCATRA - Monte Carlo Tracer!\n");
 
         /* ============= */
         /* configuration */
 
-        img_path     = "test/circle_with_ground.ppm";
-        aspect_ratio = 16.0 / 9.0;
-        img_width    = 1920;
+        img_path        = "test/circle_with_ground_with_anti_aliasing.ppm";
+        aspect_ratio    = 16.0 / 9.0;
+        img_width       = 1920;
+        samples_per_px  = 100;
 
         /* ============= */
+
+        /* Random generator seeding */
+
+        srand((unsigned int)time(NULL));
+
+        /* ------------------------ */
         
         /* Image */
 
@@ -129,22 +145,65 @@ main(void)
         
         /* Render */
 
+        pixel_samples_scale = 1.0f / (float)samples_per_px;
+
         for (uint32_t y = 0; y < img->height; y++) {
                 for (uint32_t x = 0; x < img->width; x++) {
-                        px_center = get_pixel_center(px_origin, 
-                                                     px_delta_u, px_delta_v,
-                                                     x, y);
-
-                        ray_direction = vec3_sub(px_center, cam_center);
-                        ray = (ray_t){ 
-                                .orig = cam_center,
-                                .dir  = ray_direction,
+                        accumulated_color = (vec3_t){ 
+                                .x = 0.0f,
+                                .y = 0.0f,
+                                .z = 0.0f,
                         };
 
-                        px = ray_color(ray, (hittable_t*)world);
+                        for (int s = 0; s < samples_per_px; s++) {
+                                offset = sample_square();
+                                sample_pixel_loc = vec3_add(px_origin,
+                                        vec3_add(vec3_scal(px_delta_u,
+                                                           (float)x + offset.x),
+                                                 vec3_scal(px_delta_v,
+                                                           (float)y + offset.y))
+                                );
+                                ray_direction = vec3_sub(sample_pixel_loc,
+                                                         cam_center);
+                                ray = (ray_t){
+                                        .orig = cam_center,
+                                        .dir = ray_direction,
+                                };
+
+                                sample_col = ray_color(ray, (hittable_t*)world);
+                                accumulated_color = vec3_add(accumulated_color,
+                                                             sample_col);
+                        }
+
+                        accumulated_color = vec3_scal(accumulated_color,
+                                                      pixel_samples_scale);
+
+                        px = (pixel_t){
+                                .r = accumulated_color.x,
+                                .g = accumulated_color.y,
+                                .b = accumulated_color.z,
+                        };
+
                         image_px_set(img, x, y, px);
                 }
+
+                /* progress indicator */
+                printf("\rRendering: ["); // Added \r back to fix line spam
+                for (int i = 0; i < 50; i++) {
+                        if (i < (int)(50 * ((float)(y + 1) / img->height))) {
+                                printf("=");
+                        } else if (i == (int)(50 * ((float)(y + 1) / img->height))) {
+                                printf(">");
+                        } else {
+                                printf(" ");
+                        }
+                }
+                printf("] %3d%%", (int)(((float)(y + 1) / img->height) * 100));
+                fflush(stdout);
         }
+
+        printf("\n\nRender Complete!\nSaving image ... \n");
+
 
         if (image_write_ppm(img, img_path) != 0) {
                 fprintf(stderr, "Failed to write image\n");

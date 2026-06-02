@@ -13,7 +13,7 @@ ray_at(const ray_t r, float t)
         return vec3_add(r.orig, vec3_scal(r.dir, t));
 }
 
-pixel_t 
+vec3_t
 ray_color(ray_t r, const hittable_t* world)
 {
         hit_record_t    rec;
@@ -21,21 +21,21 @@ ray_color(ray_t r, const hittable_t* world)
         float           gradient;
 
         if (world->vtable->hit(world, r, 0.001f, INF, &rec)) {
-                return (pixel_t){
-                        .r = 0.5 * (rec.normal.x + 1),
-                        .g = 0.5 * (rec.normal.y + 1),
-                        .b = 0.5 * (rec.normal.z + 1),
+                return (vec3_t){
+                        .x = 0.5f * (rec.normal.x + 1.0f),
+                        .y = 0.5f * (rec.normal.y + 1.0f),
+                        .z = 0.5f * (rec.normal.z + 1.0f),
                 };
         }
         
 
         unit_direction = vec3_unit(r.dir);
-        gradient = 0.5 * (unit_direction.y + 1.0);
+        gradient = 0.5f * (unit_direction.y + 1.0f);
 
-        return (pixel_t){ 
-                .r = (1.0 - gradient) + gradient * 0.5, 
-                .g = (1.0 - gradient) + gradient * 0.7, 
-                .b = (1.0 - gradient) + gradient * 1.0,
+        return (vec3_t){ 
+                .x = (1.0f - gradient) + gradient * 0.5f, 
+                .y = (1.0f - gradient) + gradient * 0.7f, 
+                .z = (1.0f - gradient) + gradient * 1.0f,
         };
 }
 
