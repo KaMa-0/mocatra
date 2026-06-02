@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "mocatra.h"
 
@@ -56,6 +57,12 @@ main(void)
         img_width    = 1920;
 
         /* ============= */
+
+        /* Random generator seeding */
+
+        srand((unsigned int)time(NULL));
+
+        /* ------------------------ */
         
         /* Image */
 
