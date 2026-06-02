@@ -34,7 +34,7 @@ typedef struct ray {
 
 const vec3_t ray_at(const ray_t r, float t);
 
-pixel_t ray_color(const ray_t r, const hittable_t* world);
+vec3_t ray_color(const ray_t r, const hittable_t* world);
 
 float hit_sphere(const vec3_t center, float radius, const ray_t r);
 

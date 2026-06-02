@@ -25,4 +25,14 @@ random_float(float min, float max)
         return min + (max - min) * (rand() / (RAND_MAX + 1.0f));
 }
 
+static inline vec3_t
+sample_square(void)
+{
+        return (vec3_t){
+            .x = random_float(-0.5f, 0.5f),
+            .y = random_float(-0.5f, 0.5f),
+            .z = 0.0f,
+        };
+}
+
 #endif /* _MOCATRA_H */
