@@ -54,16 +54,19 @@ main(void)
         float    pixel_samples_scale;   /* scale factor maps sum to 0.0-1.0 */
         int      samples_per_px;        /* number of samples per pixel      */
 
+        int      max_depth;
+
 
         printf("MOCATRA - Monte Carlo Tracer!\n");
 
         /* ============= */
         /* configuration */
 
-        img_path        = "test/circle_with_ground_with_anti_aliasing.ppm";
+        img_path        = "test/imgs/diffuse.ppm";
         aspect_ratio    = 16.0 / 9.0;
         img_width       = 1920;
         samples_per_px  = 100;
+        max_depth       = 50;
 
         /* ============= */
 
@@ -170,7 +173,8 @@ main(void)
                                         .dir = ray_direction,
                                 };
 
-                                sample_col = ray_color(ray, (hittable_t*)world);
+                                sample_col = ray_color(ray, max_depth,
+                                                       (hittable_t*)world);
                                 accumulated_color = vec3_add(accumulated_color,
                                                              sample_col);
                         }
@@ -179,9 +183,9 @@ main(void)
                                                       pixel_samples_scale);
 
                         px = (pixel_t){
-                                .r = accumulated_color.x,
-                                .g = accumulated_color.y,
-                                .b = accumulated_color.z,
+                                .r = linear_to_gamma(accumulated_color.x),
+                                .g = linear_to_gamma(accumulated_color.y),
+                                .b = linear_to_gamma(accumulated_color.z),
                         };
 
                         image_px_set(img, x, y, px);
