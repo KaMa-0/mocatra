@@ -14,18 +14,30 @@ ray_at(const ray_t r, float t)
 }
 
 vec3_t
-ray_color(ray_t r, const hittable_t* world)
+ray_color(ray_t r, int depth, const hittable_t* world)
 {
         hit_record_t    rec;
+        ray_t           scattered_ray;
+        vec3_t          direction;
         vec3_t          unit_direction;
+        vec3_t          incoming_col;
         float           gradient;
 
-        if (world->vtable->hit(world, r, 0.001f, INF, &rec)) {
+        if (depth <= 0)
                 return (vec3_t){
-                        .x = 0.5f * (rec.normal.x + 1.0f),
-                        .y = 0.5f * (rec.normal.y + 1.0f),
-                        .z = 0.5f * (rec.normal.z + 1.0f),
+                        .x = 0.0f,
+                        .y = 0.0f,
+                        .z = 0.0f,
                 };
+
+        if (world->vtable->hit(world, r, 0.001f, INF, &rec)) {
+                direction = vec3_add(rec.normal, random_unit_vector());
+                scattered_ray = (ray_t){
+                        .orig = rec.p,
+                        .dir  = direction,
+                };
+                incoming_col = ray_color(scattered_ray, depth - 1, world);
+                return vec3_scal(incoming_col, 0.5f);
         }
         
 
