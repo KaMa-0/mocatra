@@ -69,7 +69,7 @@ main(void)
         img_path        = "test/imgs/diffuse.ppm";
         aspect_ratio    = 16.0 / 9.0;
         img_width       = 460;
-        samples_per_px  = 50;
+        samples_per_px  = 100;
         max_depth       = 50;
 
         /* ============= */

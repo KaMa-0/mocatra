@@ -31,11 +31,29 @@ ray_color(ray_t r, int depth, const hittable_t* world)
                 };
 
         if (world->vtable->hit(world, r, 0.001f, INF, &rec)) {
+                /* emission lights handling */
                 if (rec.mat.type == MAT_DIFFUSE_LIGHT) {
                         return rec.mat.emission;
                 }
 
-                bounce_direction = vec3_add(rec.normal, random_unit_vector());
+                /* metal reflections handling */
+                if (rec.mat.type == MAT_METAL) {
+                        bounce_direction = vec3_reflect(vec3_unit(r.dir),
+                                                        rec.normal);
+                        if (vec3_dot(bounce_direction, rec.normal) <= 0.0f) {
+                                return (vec3_t){
+                                        .x = 0.0f,
+                                        .y = 0.0f,
+                                        .z = 0.0f,
+                                };
+                        }
+
+                } else {
+                        /* lambertian diffuse (default) handling */
+                        bounce_direction = vec3_add(rec.normal, 
+                                                    random_unit_vector());
+
+                }
 
                 scattered_ray = (ray_t){
                         .orig = rec.p,
@@ -47,7 +65,7 @@ ray_color(ray_t r, int depth, const hittable_t* world)
                 return vec3_cmpnt_mult(rec.mat.albedo, incoming_col);
         }
         
-
+        /* sky gradient */
         unit_direction = vec3_unit(r.dir);
         gradient = 0.5f * (unit_direction.y + 1.0f);
 
