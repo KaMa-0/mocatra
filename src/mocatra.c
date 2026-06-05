@@ -12,6 +12,7 @@
 #include "hittable.h"
 #include "hittable_list.h"
 #include "sphere.h"
+#include "material.h"
 
 
 int
@@ -24,6 +25,9 @@ main(void)
         sphere_t*        ground;         /* big sphere serving as ground     */
         sphere_t*        sphere_main;    /* main sphere of scene             */
         vec3_t           sphere_center;  /* center vector for scene spheres  */
+
+        material_t mat_ground;
+        material_t mat_main;
 
         ray_t    ray;           /* ray                          */
         vec3_t   ray_direction; /* direction of ray in 3d space */
@@ -64,8 +68,8 @@ main(void)
 
         img_path        = "test/imgs/diffuse.ppm";
         aspect_ratio    = 16.0 / 9.0;
-        img_width       = 1920;
-        samples_per_px  = 100;
+        img_width       = 460;
+        samples_per_px  = 50;
         max_depth       = 50;
 
         /* ============= */
@@ -128,18 +132,35 @@ main(void)
         sphere_main     = sphere_create();
 
         hittable_list_init(world, 3);
+
+        mat_ground = (material_t){
+                .type     = MAT_LAMBERTIAN,
+                .albedo   = {0.8f, 0.8f, 0.0f},
+                .emission = {0.0f, 0.0f, 0.0f}
+        };
+
+        mat_main = (material_t){
+                .type     = MAT_LAMBERTIAN,
+                .albedo   = {0.1f, 0.2f, 0.5f},
+                .emission = {0.0f, 0.0f, 0.0f}
+        };
+
         sphere_center = (vec3_t){
                 .x = 0,
                 .y = -100.5,
                 .z = -1,
         };
         sphere_init(ground, sphere_center, 100);
+        ground->mat = mat_ground;
+
         sphere_center = (vec3_t){
                 .x = 0,
                 .y = 0,
                 .z = -1,
         };
         sphere_init(sphere_main, sphere_center, 0.5);
+        sphere_main->mat = mat_main;
+
         hittable_list_add(world, (hittable_t*)ground);
         hittable_list_add(world, (hittable_t*)sphere_main);
 
