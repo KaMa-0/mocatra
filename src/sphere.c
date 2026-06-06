@@ -40,6 +40,8 @@ sphere_hit(const hittable_t* self, const ray_t r,
                                    (1.0f / s->radius));
         hit_record_set_face_normal(rec, r, outward_normal);
 
+        rec->mat = s->mat;
+
         return 1; /* true */
 }
 

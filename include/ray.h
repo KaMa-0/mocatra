@@ -18,6 +18,7 @@
 
 #include "vec3.h"
 #include "image.h"
+#include "material.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,6 +39,7 @@ vec3_t ray_color(ray_t r, int depth, const hittable_t* world);
 
 float hit_sphere(const vec3_t center, float radius, const ray_t r);
 
+vec3_t material_emitted(material_t mat);
 
 #ifdef __cplusplus
 }

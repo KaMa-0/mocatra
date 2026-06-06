@@ -57,6 +57,8 @@ vec3_t vec3_cmpnt_mult(const vec3_t u, const vec3_t v);
 
 vec3_t vec3_unit(const vec3_t u);
 
+vec3_t vec3_reflect(const vec3_t v, const vec3_t n);
+
 
 #ifdef __cplusplus
 }

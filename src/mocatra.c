@@ -3,6 +3,7 @@
 #include <time.h>
 
 #include "mocatra.h"
+#include "config.h"
 
 #include "viewport.h"
 #include "image.h"
@@ -12,6 +13,8 @@
 #include "hittable.h"
 #include "hittable_list.h"
 #include "sphere.h"
+#include "quad.h"
+#include "material.h"
 
 
 int
@@ -24,6 +27,9 @@ main(void)
         sphere_t*        ground;         /* big sphere serving as ground     */
         sphere_t*        sphere_main;    /* main sphere of scene             */
         vec3_t           sphere_center;  /* center vector for scene spheres  */
+
+        material_t mat_ground;
+        material_t mat_main;
 
         ray_t    ray;           /* ray                          */
         vec3_t   ray_direction; /* direction of ray in 3d space */
@@ -62,11 +68,13 @@ main(void)
         /* ============= */
         /* configuration */
 
-        img_path        = "test/imgs/diffuse.ppm";
-        aspect_ratio    = 16.0 / 9.0;
-        img_width       = 1920;
-        samples_per_px  = 100;
-        max_depth       = 50;
+        /* values taken over from the central config file */
+        img_path        = output_image_path;
+        aspect_ratio    = image_aspect_ratio;
+        img_width       = image_width;
+        samples_per_px  = samples_per_pixel;
+        max_depth       = maximum_ray_depth;
+        focal_length    = camera_focal_length;
 
         /* ============= */
 
@@ -90,58 +98,111 @@ main(void)
 
         /* Camera */
 
-        focal_length = 1.0;
-        cam_center   = (vec3_t){ 
-                .x = 0, 
-                .y = 0, 
-                .z = 0,
-        };
+        vec3_t lookfrom     = (vec3_t){278.0f, 278.0f, -800.0f}; 
+        vec3_t lookat       = (vec3_t){278.0f, 278.0f, 0.0f};    
+        vec3_t vup          = (vec3_t){0.0f, 1.0f, 0.0f};        
+        
+        float vfov          = 40.0f;                             
+        float theta         = vfov * (float)PI / 180.0f;
+        float h             = tanf(theta / 2.0f);
+        
+        focal_length        = vec3_length(vec3_sub(lookfrom, lookat)); 
+        vp_height           = 2.0f * h * focal_length;
+        vp_width            = vp_height * ((double)(img_width) / img_height);
 
-        vp_height    = 2.0;
-        vp_width     = vp_height * ((double)(img_width) / img_height);
+        vec3_t w = vec3_unit(vec3_sub(lookfrom, lookat)); 
+        vec3_t u = vec3_unit(vec3_cross(vup, w));         
+        vec3_t v = vec3_cross(w, u);                      
 
-        vp_u = (vec3_t){ 
-                .x = vp_width, 
-                .y = 0, 
-                .z = 0 
-        };
-        vp_v = (vec3_t){ 
-                .x = 0,
-                .y = -vp_height,
-                .z = 0
-        };
+        cam_center = lookfrom;
+
+        vp_u = vec3_scal(u, vp_width);
+        vp_v = vec3_scal(v, -vp_height); 
 
         px_delta_u = vec3_scal(vp_u, (1.0f / (float)img_width));
         px_delta_v = vec3_scal(vp_v, (1.0f / (float)img_height));
 
-        vp_origin = get_viewport_origin(cam_center, vp_u, vp_v, focal_length);
+        vec3_t vp_upper_left = vec3_sub(
+                vec3_sub(vec3_sub(cam_center, vec3_scal(w, focal_length)), 
+                         vec3_scal(vp_u, 0.5f)),
+                vec3_scal(vp_v, 0.5f)
+        );
 
-        px_origin = get_pixel_origin(vp_origin, px_delta_u, px_delta_v);
+        px_origin = vec3_add(vp_upper_left, 
+                             vec3_scal(vec3_add(px_delta_u, px_delta_v), 0.5f));
 
         /* ------ */
 
 
         /* World */
 
-        world           = hittable_list_create();
-        ground          = sphere_create();
-        sphere_main     = sphere_create();
+        world = hittable_list_create();
+        
+        hittable_list_init(world, 18);
 
-        hittable_list_init(world, 3);
-        sphere_center = (vec3_t){
-                .x = 0,
-                .y = -100.5,
-                .z = -1,
+        material_t red   = {
+                .type = MAT_LAMBERTIAN, 
+                .albedo = {0.65f, 0.05f, 0.05f}
         };
-        sphere_init(ground, sphere_center, 100);
-        sphere_center = (vec3_t){
-                .x = 0,
-                .y = 0,
-                .z = -1,
+        material_t white = {
+                .type = MAT_LAMBERTIAN, 
+                .albedo = {0.73f, 0.73f, 0.73f}
         };
-        sphere_init(sphere_main, sphere_center, 0.5);
-        hittable_list_add(world, (hittable_t*)ground);
-        hittable_list_add(world, (hittable_t*)sphere_main);
+        material_t green = {
+                .type = MAT_LAMBERTIAN, 
+                .albedo = {0.12f, 0.45f, 0.15f}
+        };
+        
+        material_t light = {
+                .type = MAT_DIFFUSE_LIGHT, 
+                .emission = {15.0f, 15.0f, 15.0f}
+        };
+
+        quad_t* left_wall   = quad_create();
+        quad_t* right_wall  = quad_create();
+        quad_t* top_light   = quad_create();
+        quad_t* floor_wall  = quad_create();
+        quad_t* ceiling_wall= quad_create();
+        quad_t* back_wall   = quad_create();
+
+        quad_init(left_wall, (vec3_t){ 555, 0, 0 }, (vec3_t){ 0, 0, 555 }, 
+                  (vec3_t){ 0, 555, 0 }, green);
+
+        quad_init(right_wall, (vec3_t){ 0, 0, 0 }, (vec3_t){ 0, 0, 555 }, 
+                  (vec3_t){ 0, 555, 0 }, red);
+
+        quad_init(top_light, (vec3_t){ 213, 554, 227 }, (vec3_t){ 130, 0, 0 }, 
+                  (vec3_t){ 0, 0, 105 }, light);
+
+        quad_init(floor_wall, (vec3_t){ 0, 0, 0 }, (vec3_t){ 555, 0, 0 }, 
+                  (vec3_t){ 0, 0, 555 }, white);
+
+        quad_init(ceiling_wall, (vec3_t){ 0, 555, 0 }, (vec3_t){ 555, 0, 0 }, 
+                  (vec3_t){ 0, 0, 555 }, white);
+
+        quad_init(back_wall, (vec3_t){ 0, 0, 555 }, (vec3_t){ 555, 0, 0 }, 
+                  (vec3_t){ 0, 555, 0 }, white);
+
+        hittable_list_add(world, (hittable_t*)left_wall);
+        hittable_list_add(world, (hittable_t*)right_wall);
+        hittable_list_add(world, (hittable_t*)top_light);
+        hittable_list_add(world, (hittable_t*)floor_wall);
+        hittable_list_add(world, (hittable_t*)ceiling_wall);
+        hittable_list_add(world, (hittable_t*)back_wall);
+
+        hittable_list_add_box(world, 
+                              (vec3_t){0.0f, 0.0f, 0.0f}, 
+                              (vec3_t){165.0f, 165.0f, 165.0f}, 
+                              -18.0f, 
+                              (vec3_t){130.0f, 0.0f, 65.0f}, 
+                              white);
+
+        hittable_list_add_box(world, 
+                              (vec3_t){0.0f, 0.0f, 0.0f}, 
+                              (vec3_t){165.0f, 330.0f, 165.0f}, 
+                              15.0f, 
+                              (vec3_t){265.0f, 0.0f, 295.0f}, 
+                              white);
 
         /* ----- */
 

@@ -53,3 +53,8 @@ vec3_unit(const vec3_t u)
         return vec3_scal(u, (float)(1.0 / vec3_length(u)));
 }
 
+vec3_t
+vec3_reflect(const vec3_t v, const vec3_t n)
+{
+        return vec3_sub(v, vec3_scal(n, 2.0f * vec3_dot(v, n)));
+}

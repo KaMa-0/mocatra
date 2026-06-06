@@ -19,6 +19,7 @@
 
 #include "vec3.h"
 #include "ray.h"
+#include "material.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,10 +27,11 @@ extern "C" {
 
 
 typedef struct hit_record {
-    vec3_t p;
-    vec3_t normal;
-    float  t;
-    int8_t front_face;
+    vec3_t      p;
+    vec3_t      normal;
+    float       t;
+    int8_t      front_face;
+    material_t  mat;
 } hit_record_t;
 
 typedef struct hittable hittable_t;

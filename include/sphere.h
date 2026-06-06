@@ -17,8 +17,9 @@
 
 #include <stdint.h>
 
-#include "hittable.h"
 #include "vec3.h"
+#include "hittable.h"
+#include "material.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,6 +30,7 @@ typedef struct sphere {
     hittable_t  base;
     vec3_t      center; 
     float       radius;
+    material_t  mat;
 } sphere_t;
 
 
