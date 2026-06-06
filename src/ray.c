@@ -64,6 +64,13 @@ ray_color(ray_t r, int depth, const hittable_t* world)
 
                 return vec3_cmpnt_mult(rec.mat.albedo, incoming_col);
         }
+
+        /* blackness */
+        return (vec3_t){
+                .x = 0.0f,
+                .y = 0.0f,
+                .z = 0.0f,
+        };
         
         /* sky gradient */
         unit_direction = vec3_unit(r.dir);

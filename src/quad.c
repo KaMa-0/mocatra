@@ -88,3 +88,70 @@ quad_init(quad_t* quad, vec3_t q, vec3_t u, vec3_t v, material_t mat)
         
         quad->w = vec3_scal(n, 1.0f / vec3_len_squared(n));
 }
+
+void
+hittable_list_add_box(hittable_list_t* list, vec3_t p0, vec3_t p1, 
+                      material_t mat)
+{
+        vec3_t min_pt;
+        vec3_t max_pt;
+        quad_t* f_front;
+        quad_t* f_back;
+        quad_t* f_right;
+        quad_t* f_left;
+        quad_t* f_top;
+        quad_t* f_bottom;
+
+        min_pt = (vec3_t){.x = fminf(p0.x, p1.x), .y = fminf(p0.y, p1.y), .z = fminf(p0.z, p1.z)};
+        max_pt = (vec3_t){.x = fmaxf(p0.x, p1.x), .y = fmaxf(p0.y, p1.y), .z = fmaxf(p0.z, p1.z)};
+
+        f_front  = quad_create();
+        f_back   = quad_create();
+        f_right  = quad_create();
+        f_left   = quad_create();
+        f_top    = quad_create();
+        f_bottom = quad_create();
+
+        /* Front face */
+        quad_init(f_front, 
+                  (vec3_t){min_pt.x, min_pt.y, max_pt.z}, 
+                  (vec3_t){max_pt.x - min_pt.x, 0, 0}, 
+                  (vec3_t){0, max_pt.y - min_pt.y, 0}, mat);
+
+        /* Right face */
+        quad_init(f_right, 
+                  (vec3_t){max_pt.x, min_pt.y, max_pt.z}, 
+                  (vec3_t){0, 0, min_pt.z - max_pt.z}, 
+                  (vec3_t){0, max_pt.y - min_pt.y, 0}, mat);
+
+        /* Back face */
+        quad_init(f_back, 
+                  (vec3_t){max_pt.x, min_pt.y, min_pt.z}, 
+                  (vec3_t){min_pt.x - max_pt.x, 0, 0}, 
+                  (vec3_t){0, max_pt.y - min_pt.y, 0}, mat);
+
+        /* Left face */
+        quad_init(f_left, 
+                  (vec3_t){min_pt.x, min_pt.y, min_pt.z}, 
+                  (vec3_t){0, 0, max_pt.z - min_pt.z}, 
+                  (vec3_t){0, max_pt.y - min_pt.y, 0}, mat);
+
+        /* Top face */
+        quad_init(f_top, 
+                  (vec3_t){min_pt.x, max_pt.y, max_pt.z}, 
+                  (vec3_t){max_pt.x - min_pt.x, 0, 0}, 
+                  (vec3_t){0, 0, min_pt.z - max_pt.z}, mat);
+
+        /* Bottom face */
+        quad_init(f_bottom, 
+                  (vec3_t){min_pt.x, min_pt.y, min_pt.z}, 
+                  (vec3_t){max_pt.x - min_pt.x, 0, 0}, 
+                  (vec3_t){0, 0, max_pt.z - min_pt.z}, mat);
+
+        hittable_list_add(list, (hittable_t*)f_front);
+        hittable_list_add(list, (hittable_t*)f_right);
+        hittable_list_add(list, (hittable_t*)f_back);
+        hittable_list_add(list, (hittable_t*)f_left);
+        hittable_list_add(list, (hittable_t*)f_top);
+        hittable_list_add(list, (hittable_t*)f_bottom);
+}

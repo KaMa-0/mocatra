@@ -17,6 +17,7 @@
 
 #include "vec3.h"
 #include "hittable.h"
+#include "hittable_list.h"
 #include "material.h"
 
 #ifdef __cplusplus
@@ -39,6 +40,10 @@ typedef struct quad {
 quad_t* quad_create(void);
 
 void    quad_init(quad_t* quad, vec3_t q, vec3_t u, vec3_t v, material_t mat);
+
+
+void hittable_list_add_box(hittable_list_t* list, vec3_t p0, vec3_t p1, 
+                           material_t mat);
 
 
 #ifdef __cplusplus
