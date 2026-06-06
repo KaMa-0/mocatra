@@ -43,6 +43,7 @@ void    quad_init(quad_t* quad, vec3_t q, vec3_t u, vec3_t v, material_t mat);
 
 
 void hittable_list_add_box(hittable_list_t* list, vec3_t p0, vec3_t p1, 
+                           float angle_degrees, vec3_t transformation,
                            material_t mat);
 
 

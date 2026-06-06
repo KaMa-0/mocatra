@@ -98,44 +98,38 @@ main(void)
 
         /* Camera */
 
-        /* Camera Setup variables using Ray Tracing series architecture */
-        vec3_t lookfrom     = (vec3_t){278.0f, 278.0f, -800.0f}; // Camera location
-        vec3_t lookat       = (vec3_t){278.0f, 278.0f, 0.0f};    // Focus point
-        vec3_t vup          = (vec3_t){0.0f, 1.0f, 0.0f};        // World up vector
+        vec3_t lookfrom     = (vec3_t){278.0f, 278.0f, -800.0f}; 
+        vec3_t lookat       = (vec3_t){278.0f, 278.0f, 0.0f};    
+        vec3_t vup          = (vec3_t){0.0f, 1.0f, 0.0f};        
         
-        float vfov          = 40.0f;                             // Vertical field-of-view in degrees
+        float vfov          = 40.0f;                             
         float theta         = vfov * (float)PI / 180.0f;
         float h             = tanf(theta / 2.0f);
         
-        /* Derive matching viewport dimensions dynamically based on focal length distance */
         focal_length        = vec3_length(vec3_sub(lookfrom, lookat)); 
         vp_height           = 2.0f * h * focal_length;
         vp_width            = vp_height * ((double)(img_width) / img_height);
 
-        /* Calculate the camera coordinate system orthonormal basis vectors */
-        vec3_t w = vec3_unit(vec3_sub(lookfrom, lookat)); // Vector pointing out of screen
-        vec3_t u = vec3_unit(vec3_cross(vup, w));         // Camera right vector
-        vec3_t v = vec3_cross(w, u);                      // Camera up vector
+        vec3_t w = vec3_unit(vec3_sub(lookfrom, lookat)); 
+        vec3_t u = vec3_unit(vec3_cross(vup, w));         
+        vec3_t v = vec3_cross(w, u);                      
 
         cam_center = lookfrom;
 
-        /* Calculate the actual vectors across the horizontal and vertical viewport edges */
         vp_u = vec3_scal(u, vp_width);
-        vp_v = vec3_scal(v, -vp_height); // Invert to match top-to-bottom image coordinates
+        vp_v = vec3_scal(v, -vp_height); 
 
-        /* Calculate horizontal and vertical delta vectors from pixel to pixel */
         px_delta_u = vec3_scal(vp_u, (1.0f / (float)img_width));
         px_delta_v = vec3_scal(vp_v, (1.0f / (float)img_height));
 
-        /* Calculate the position of the upper left viewport corner */
-        /* vp_upper_left = cam_center - (focal_length * w) - vp_u/2 - vp_v/2 */
         vec3_t vp_upper_left = vec3_sub(
-                vec3_sub(vec3_sub(cam_center, vec3_scal(w, focal_length)), vec3_scal(vp_u, 0.5f)),
+                vec3_sub(vec3_sub(cam_center, vec3_scal(w, focal_length)), 
+                         vec3_scal(vp_u, 0.5f)),
                 vec3_scal(vp_v, 0.5f)
         );
 
-        /* Top-left pixel origin location = upper_left + 0.5 * (delta_u + delta_v) */
-        px_origin = vec3_add(vp_upper_left, vec3_scal(vec3_add(px_delta_u, px_delta_v), 0.5f));
+        px_origin = vec3_add(vp_upper_left, 
+                             vec3_scal(vec3_add(px_delta_u, px_delta_v), 0.5f));
 
         /* ------ */
 
@@ -172,10 +166,10 @@ main(void)
         quad_t* back_wall   = quad_create();
 
         quad_init(left_wall, (vec3_t){ 555, 0, 0 }, (vec3_t){ 0, 0, 555 }, 
-                  (vec3_t){ 0, 555, 0 }, red);
+                  (vec3_t){ 0, 555, 0 }, green);
 
         quad_init(right_wall, (vec3_t){ 0, 0, 0 }, (vec3_t){ 0, 0, 555 }, 
-                  (vec3_t){ 0, 555, 0 }, green);
+                  (vec3_t){ 0, 555, 0 }, red);
 
         quad_init(top_light, (vec3_t){ 213, 554, 227 }, (vec3_t){ 130, 0, 0 }, 
                   (vec3_t){ 0, 0, 105 }, light);
@@ -196,11 +190,19 @@ main(void)
         hittable_list_add(world, (hittable_t*)ceiling_wall);
         hittable_list_add(world, (hittable_t*)back_wall);
 
-        hittable_list_add_box(world, (vec3_t){ 130, 0, 65 }, 
-                              (vec3_t){ 295, 165, 230 }, white);
+        hittable_list_add_box(world, 
+                              (vec3_t){0.0f, 0.0f, 0.0f}, 
+                              (vec3_t){165.0f, 165.0f, 165.0f}, 
+                              -18.0f, 
+                              (vec3_t){130.0f, 0.0f, 65.0f}, 
+                              white);
 
-        hittable_list_add_box(world, (vec3_t){ 265, 0, 295 }, 
-                              (vec3_t){ 430, 330, 460 }, white);
+        hittable_list_add_box(world, 
+                              (vec3_t){0.0f, 0.0f, 0.0f}, 
+                              (vec3_t){165.0f, 330.0f, 165.0f}, 
+                              15.0f, 
+                              (vec3_t){265.0f, 0.0f, 295.0f}, 
+                              white);
 
         /* ----- */
 
