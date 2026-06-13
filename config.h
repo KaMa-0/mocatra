@@ -6,12 +6,23 @@
  * */
 
 
-char* output_image_path   = "mocatra_image.ppm"; /* relative path to output  */
-float image_aspect_ratio  = 1.0f / 1.0f;         /* must be float value      */
-int   image_width         = 600;                 /* width of output in pixel */
-int   samples_per_pixel   = 100;                 /* number of samples/pixel  */
-int   maximum_ray_depth   = 20;                  /* iteration depth for ray  */
-float camera_focal_length = 1.0f;                /* focal length of camera   */
+/* relative path to output  */
+char* output_image_path   = "mocatra_image.ppm"; 
+
+/* must be float value      */
+float image_aspect_ratio  = 1.0f / 1.0f;         
+
+/* width of output in pixel */
+int   image_width         = 600;                 
+
+/* number of samples/pixel  */
+int   samples_per_pixel   = 1000;                
+
+/* iteration depth for ray  */
+int   maximum_ray_depth   = 50;                  
+
+/* focal length of camera, must be float value  */
+float camera_focal_length = 1.0f;                
 
 
 /* -----------------------------------------

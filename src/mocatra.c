@@ -158,6 +158,11 @@ main(void)
                 .emission = {15.0f, 15.0f, 15.0f}
         };
 
+        material_t polished_metal = {
+                .type = MAT_METAL,
+                .albedo = {0.85f, 0.85f, 0.85f}
+        };
+
         quad_t* left_wall   = quad_create();
         quad_t* right_wall  = quad_create();
         quad_t* top_light   = quad_create();
