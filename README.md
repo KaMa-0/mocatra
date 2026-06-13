@@ -2,7 +2,7 @@
 
 **mocatra** (**mo**nte **ca**rlo **tra**cer) is a semester long project at the 
 [HCW](https://www.hcw.ac.at/) (Hochschule Campus Wien - 
-_Computer Science and Digital Communications_), which aims at implementing a 
+_Computer Science and Digital Communications_), which aims to implement a 
 monte carlo path tracer from scratch, in the C programming language.  
 
 ---  
@@ -124,7 +124,8 @@ strictly match the C syntax and expected types!
 
 ### Building and Running  
 
-Once the prerequisites are installed and optionally  navigate to the root folder of the 
+Once the prerequisites are installed and optionally any configuration changes 
+have been done in the ``config.h`` file, navigate to the root folder of the 
 repository in your terminal and use the following commands:  
 
 ``make clean``  
@@ -133,7 +134,7 @@ repository in your terminal and use the following commands:
 This creates a binary for your OS and runs it automatically.  
 
 For development purposes, a debugger friendly version, along with Address 
-Sanitizer can be built using the following commands:  
+Sanitizer can be built and run using the following commands:  
 
 ``make clean``  
 ``make debug``  
@@ -150,6 +151,7 @@ implementation.
 
 Since the books provide complete code examples for programming along, the 
 source code of this project is heavily influenced by the aformentioned material 
-and although a different implementation in a different language, the core 
-principles, structures and logic are taken from the source material and adapted 
-to fit the specific project needs in terms of complexity and expected results.  
+and although this is a different implementation in a different language, 
+the core principles, structures and logic are taken from the source material 
+and adapted to fit the specific project needs in terms of complexity and 
+expected results.  
