@@ -5,11 +5,9 @@ CONF := config.h
 
 # 1. Detect Operating System
 ifeq ($(OS),Windows_NT)
-    # Windows environment (detected via environment variable)
     OS_NAME := win64
     EXE_EXT := .exe
 else
-    # Unix-like environments (macOS / Linux)
     UNAME_S := $(shell uname -s)
     ifeq ($(UNAME_S),Darwin)
         OS_NAME := macos
@@ -20,12 +18,19 @@ else
     endif
 endif
 
-# 2. Define the OS-specific binary destination
 DST := $(DST_DIR)/mocatra_$(OS_NAME)$(EXE_EXT)
 
-# Compiler flags
-CFLAGS := -I$(INC) -I. -fsanitize=address -std=c99
+# 2. Base Compiler Flags
+CFLAGS := -I$(INC) -I. -std=c99
 LIBS := -lm
+
+# 3. Target-Specific Flags 
+all: CFLAGS += -O3 -march=native -DNDEBUG
+all: LDFLAGS += -s
+
+# 4. Debug Flags
+debug: CFLAGS += -O0 -g -fsanitize=address
+debug: LDFLAGS += -fsanitize=address
 
 .PHONY: default all debug run clean
 
@@ -33,11 +38,11 @@ default: all run
 
 all:
 	@mkdir -p $(DST_DIR)
-	gcc $(SRC) -o $(DST) $(CFLAGS) -s $(LIBS)
+	gcc $(SRC) -o $(DST) $(CFLAGS) $(LDFLAGS) $(LIBS)
 
 debug:
 	@mkdir -p $(DST_DIR)
-	gcc $(SRC) -o $(DST) $(CFLAGS) -g $(LIBS)
+	gcc $(SRC) -o $(DST) $(CFLAGS) $(LDFLAGS) $(LIBS)
 	gdb $(DST)
 
 run:
