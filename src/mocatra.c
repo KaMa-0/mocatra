@@ -74,7 +74,7 @@ main(void)
         img_width       = image_width;
         samples_per_px  = samples_per_pixel;
         max_depth       = maximum_ray_depth;
-        focal_length    = camera_focal_length;
+        focal_length    = 1.0f;
 
         /* ============= */
 

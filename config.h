@@ -21,9 +21,6 @@ int   samples_per_pixel   = 1000;
 /* iteration depth for ray  */
 int   maximum_ray_depth   = 50;                  
 
-/* focal length of camera, must be float value  */
-float camera_focal_length = 1.0f;                
-
 
 /* -----------------------------------------
  *  NOTE:
