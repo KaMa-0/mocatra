@@ -141,13 +141,100 @@ Sanitizer can be built and run using the following commands:
 
 ---  
 
+## How it works  
+
+The following is an attempt at explaining the basic structure and mathematical 
+functionality behind the C source code.  
+Although a much better structure and explanation can be found in the used 
+[References](#references).  
+
+At it's core, the goal of the path tracer is to solve the following problem in 
+order to create an image as close to reality as possible:  
+
+**How much light reaches the camera from every single pixel?**  
+
+Physically, the amount of light for any given point, depends on the light 
+coming from all directions on the hemisphere above the point, which is 
+formulated in the [Rendering Equation](https://en.wikipedia.org/wiki/Rendering_equation#cite_note-Kajiya1986-2):  
+
+$L_{o}(p,\omega_{o})=L_{e}(p,\omega_{o})+\int_{\Omega}{f_{r}(p,\omega_{i},\omega_{o})L_{i}(p,\omega_{i})cos(\theta)d\omega_{i}}$  
+
+Where $L_{o}$ is the light leaving a certain point $p$ in the direction 
+$\omega_{o}$, which is the sum of:  
+
+* $L_{e}$ the emitted light  
+* $L_{i}$ all incoming light from all directions $\omega_{i}$, depending on 
+  how much is reflected $f_{r}$  
+
+Due to the complexity of this integral, solving it analytically is impossible 
+and requires another approach, which is where the Monte Carlo Method comes into 
+play.  
+
+Instead of solving the integral of the Rendering Equation, we instead average 
+the values of random samples, estimating the real value with the following 
+estimator:  
+
+$\int{f(x) dx} \approx \frac{1}{N} \sum_{i = 1}^{N}{\frac{f(x_{i})}{p(x_{i})}}$  
+
+Where $f(x_{i})$ is the color returned by a single ray path, $p(x_{i})$ is the 
+probability density function (PDF) which gives the probability of choosing a 
+specific direction.  
+
+In terms of the Rendering Equation, the Monte Carlo Estimator becomes:  
+
+$L_{o} \approx L_{e} + \frac{1}{N} \sum_{i=1}^{N}{ \frac{ f_{r}(p, \omega_{i}, \omega_{o}) L_{i}(p, \omega_{i}) \cos(\theta) }{ p(\omega_{i}) } }$  
+
+This form is what the Monte Carlo Path Tracer builds upon in the available 
+source code. The following is a mapping showing which part in the code 
+corresponds to which mathematical component:  
+
+* $N$ . . . ``samples_per_pixel`` in [``config.h``](https://github.com/KaMa-0/mocatra/blob/main/config.h)  
+
+  This value defines how many samples (number of random direction vectors) are 
+  used for evaluating the color of one pixel as a whole.  
+
+* $L_{e}$ . . . ``rec.mat.emission`` in [``src/ray.c``](https://github.com/KaMa-0/mocatra/blob/main/src/ray.c)  
+
+  This is the direct light source contribution to the color calculation of a 
+  specific hit point, which in turn is used to average the color of the entire 
+  pixel.  
+
+* $f_{r}$ . . . Material ([BRDF](https://en.wikipedia.org/wiki/Bidirectional_reflectance_distribution_function))
+  ``rec.mat.albedo`` in [``src/ray.c``](https://github.com/KaMa-0/mocatra/blob/main/src/ray.c)  
+
+  This is the surface property which defines how reflective a given object is. 
+  Here, a perfect Lambertian diffuse surface.  
+
+* $L_{i}$ . . . ``incoming_col`` in [``src/ray.c``](https://github.com/KaMa-0/mocatra/blob/main/src/ray.c)  
+
+  The result of recursive calling of the main ``ray_color`` function where 
+  once a ray hits an object in the scene, it scatters in a random direction 
+  until either the maximum recursion depth is reached, or a light source from 
+  the scene is hit by the ray, which contributes to the color calculation as 
+  mentioned for point $L_{e}$.  
+
+* $\cos(\theta)$ . . . included in ``scattering_pdf`` in [``src/ray.c``](https://github.com/KaMa-0/mocatra/blob/main/src/ray.c)  
+
+  [Lambert's Cosine Law](https://en.wikipedia.org/wiki/Lambert%27s_cosine_law) 
+  which is included in the ``scattering_pdf``, makes the rays which are 
+  randomly scattered, biased towards the center of the hemisphere. 
+  (Cosine weighted Sampling)  
+
+* $p(\omega_{i})$ . . . ``pdf`` in [``src/ray.c``](https://github.com/KaMa-0/mocatra/blob/main/src/ray.c)  
+ 
+  This is the probability that ``random_unit_vector()`` picks the direction 
+  $\omega_{i}$, which is used as a correction factor to avoid artificially 
+  bright spots due to the **Lambert's Consine Law** in the ``scattering_pdf``.  
+
+---  
+
 ## References  
 
 The main resource used for this project is the book series 
 [Ray Tracing In One Weekend](https://raytracing.github.io/) by [Peter Shirley](https://github.com/petershirley). 
 Specifically the books [_Ray Tracing in One Weekend_](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
-and [_Ray Tracing: The Rest of Your Life_](https://raytracing.github.io/books/RayTracingTheRestOfYourLife.html) are particularly relevant for this 
-implementation.  
+and [_Ray Tracing: The Rest of Your Life_](https://raytracing.github.io/books/RayTracingTheRestOfYourLife.html) 
+are particularly relevant for this implementation.  
 
 Since the books provide complete code examples for programming along, the 
 source code of this project is heavily influenced by the aformentioned material 
