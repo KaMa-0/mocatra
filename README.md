@@ -45,7 +45,7 @@ default package manager.
   ``sudo apt update`` 
 
 * for gcc compiler & make build tool:  
-  ``sudo apt install build-essentials``  
+  ``sudo apt install build-essential``  
 
 * gdb debugger (optional):  
   ``sudo apt install gdb``  
@@ -94,7 +94,7 @@ The following are the configuration options available in ``config.h``:
   be relative to the project root, where the config.h file is located.  
 
 * ``image_aspect_ratio``:  
-  The aspect ration of the output image, which is given by division of 2 float 
+  The aspect ratio of the output image, which is given by division of 2 float 
   values (in C float values must be of format: ``1.0f``). 
   Example ratios would be: ``1.0f / 1.0f``, ``19.0f / 6.0f``, ``4.0f / 3.0f``.  
   This parameter has an **impact on render quality and performance**.  
@@ -200,10 +200,12 @@ corresponds to which mathematical component:
   pixel.  
 
 * $f_{r}$ . . . Material ([BRDF](https://en.wikipedia.org/wiki/Bidirectional_reflectance_distribution_function))
-  ``rec.mat.albedo`` in [``src/ray.c``](https://github.com/KaMa-0/mocatra/blob/main/src/ray.c)  
+  Derived from ``rec.mat.albedo`` in [``src/ray.c``](https://github.com/KaMa-0/mocatra/blob/main/src/ray.c)  
 
   This is the surface property which defines how reflective a given object is. 
-  Here, a perfect Lambertian diffuse surface.  
+  For a perfect Lambertian diffuse surface the BRDF is $\frac{\text{albedo}}{\pi}$.
+  However because of the sampling PDF also contains division by $\pi$, the 
+  terms cancel out leaving just $\text{albedo}$.  
 
 * $L_{i}$ . . . ``incoming_col`` in [``src/ray.c``](https://github.com/KaMa-0/mocatra/blob/main/src/ray.c)  
 
@@ -222,9 +224,10 @@ corresponds to which mathematical component:
 
 * $p(\omega_{i})$ . . . ``pdf`` in [``src/ray.c``](https://github.com/KaMa-0/mocatra/blob/main/src/ray.c)  
  
-  This is the probability that ``random_unit_vector()`` picks the direction 
-  $\omega_{i}$, which is used as a correction factor to avoid artificially 
-  bright spots due to the **Lambert's Consine Law** in the ``scattering_pdf``.  
+  The Probability Density Function (PDF) of ``random_unit_vector()`` which 
+  serves as a correction factor to divide out the previously introduced 
+  sampling bias from **Lambert's Cosine Law** in ``scattering_pdf``,
+  to make the Monte Carlo Estimator unbiased.  
 
 ---  
 
@@ -242,3 +245,9 @@ and although this is a different implementation in a different language,
 the core principles, structures and logic are taken from the source material 
 and adapted to fit the specific project needs in terms of complexity and 
 expected results.  
+
+For the basic understanding of Monte Carlo Integration specifically in the 
+context of computer graphics and path tracing, the 4th edition of the free 
+web version of 
+[Physically Based Rendering: From Theory To Implementation](https://pbr-book.org/4ed/contents) 
+was used as a reference.  
