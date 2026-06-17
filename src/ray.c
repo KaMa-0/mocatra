@@ -71,16 +71,6 @@ ray_color(ray_t r, int depth, const hittable_t* world)
                 .y = 0.0f,
                 .z = 0.0f,
         };
-        
-        /* sky gradient */
-        unit_direction = vec3_unit(r.dir);
-        gradient = 0.5f * (unit_direction.y + 1.0f);
-
-        return (vec3_t){ 
-                .x = (1.0f - gradient) + gradient * 0.5f, 
-                .y = (1.0f - gradient) + gradient * 0.7f, 
-                .z = (1.0f - gradient) + gradient * 1.0f,
-        };
 }
 
 float
