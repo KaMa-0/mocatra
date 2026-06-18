@@ -168,6 +168,12 @@ $\omega_{o}$, which is the sum of:
 * $L_{i}$ all incoming light from all directions $\omega_{i}$, depending on 
   how much is reflected $f_{r}$  
 
+**Note:** This is a "simplified" version adapted for computer graphics. 
+In the original Rendering Equation, the time $t$ and the wavelength $\lambda$ 
+are additional arguments in the functions $L_{o}$, $L_{e}$, $L_{i}$ and $f_{r}$,
+but this form assumes instant speed of light ($t$ is constant) and the 
+wavelength $\lambda$ is simplified to ``R,G,B`` values.  
+
 Due to the complexity of this integral, solving it analytically is impossible 
 and requires another approach, which is where the Monte Carlo Method comes into 
 play.  
