@@ -166,7 +166,7 @@ $\omega_{o}$, which is the sum of:
 
 * $L_{e}$ the emitted light  
 * $L_{i}$ all incoming light from all directions $\omega_{i}$, depending on 
-  how much is reflected $f_{r}$  
+  $f_{r}$ how much is reflected.   
 
 **Note:** This is a "simplified" version adapted for computer graphics. 
 In the original Rendering Equation, the time $t$ and the wavelength $\lambda$ 
