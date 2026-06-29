@@ -15,6 +15,7 @@
 #include "sphere.h"
 #include "quad.h"
 #include "material.h"
+#include "camera.h"
 
 
 int
@@ -34,15 +35,7 @@ main(void)
         ray_t    ray;           /* ray                          */
         vec3_t   ray_direction; /* direction of ray in 3d space */
 
-        vec3_t   cam_center; /* 3d position of camera                       */
-        vec3_t   vp_origin;  /* 3d position of viewport origin              */
-        vec3_t   vp_u, vp_v; /* viewport vec from left to right edge (vp_u) */
-                             /* viewport vec from top to bottom edge (vp_v) */
-
-        vec3_t   px_origin; /* 3d position of pixel grid origin           */
-        vec3_t   px_center; /* 3d position of the center-point of a pixel */
-        vec3_t   px_delta_u, px_delta_v; /* pixel delta left to right (u) */
-                                         /* pixel delta top to bottom (v) */
+        camera_t cam;
 
         vec3_t   accumulated_color; /* contains sub pixel color accumulation */
         vec3_t   offset;            /* random offset within sample square    */
@@ -98,38 +91,7 @@ main(void)
 
         /* Camera */
 
-        vec3_t lookfrom     = (vec3_t){278.0f, 278.0f, -800.0f}; 
-        vec3_t lookat       = (vec3_t){278.0f, 278.0f, 0.0f};    
-        vec3_t vup          = (vec3_t){0.0f, 1.0f, 0.0f};        
-        
-        float vfov          = 40.0f;                             
-        float theta         = vfov * (float)PI / 180.0f;
-        float h             = tanf(theta / 2.0f);
-        
-        focal_length        = vec3_length(vec3_sub(lookfrom, lookat)); 
-        vp_height           = 2.0f * h * focal_length;
-        vp_width            = vp_height * ((double)(img_width) / img_height);
-
-        vec3_t w = vec3_unit(vec3_sub(lookfrom, lookat)); 
-        vec3_t u = vec3_unit(vec3_cross(vup, w));         
-        vec3_t v = vec3_cross(w, u);                      
-
-        cam_center = lookfrom;
-
-        vp_u = vec3_scal(u, vp_width);
-        vp_v = vec3_scal(v, -vp_height); 
-
-        px_delta_u = vec3_scal(vp_u, (1.0f / (float)img_width));
-        px_delta_v = vec3_scal(vp_v, (1.0f / (float)img_height));
-
-        vec3_t vp_upper_left = vec3_sub(
-                vec3_sub(vec3_sub(cam_center, vec3_scal(w, focal_length)), 
-                         vec3_scal(vp_u, 0.5f)),
-                vec3_scal(vp_v, 0.5f)
-        );
-
-        px_origin = vec3_add(vp_upper_left, 
-                             vec3_scal(vec3_add(px_delta_u, px_delta_v), 0.5f));
+        cam = camera_init(img_width, img_height);
 
         /* ------ */
 
@@ -226,16 +188,16 @@ main(void)
 
                         for (int s = 0; s < samples_per_px; s++) {
                                 offset = sample_square();
-                                sample_pixel_loc = vec3_add(px_origin,
-                                        vec3_add(vec3_scal(px_delta_u,
+                                sample_pixel_loc = vec3_add(cam.px_origin,
+                                        vec3_add(vec3_scal(cam.px_delta_u,
                                                            (float)x + offset.x),
-                                                 vec3_scal(px_delta_v,
+                                                 vec3_scal(cam.px_delta_v,
                                                            (float)y + offset.y))
                                 );
                                 ray_direction = vec3_sub(sample_pixel_loc,
-                                                         cam_center);
+                                                         cam.center);
                                 ray = (ray_t){
-                                        .orig = cam_center,
+                                        .orig = cam.center,
                                         .dir = ray_direction,
                                 };
 
