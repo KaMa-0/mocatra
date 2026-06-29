@@ -5,7 +5,6 @@
 #include "mocatra.h"
 #include "config.h"
 
-#include "viewport.h"
 #include "image.h"
 #include "vec3.h"
 #include "ray.h"
