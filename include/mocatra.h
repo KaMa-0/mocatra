@@ -1,17 +1,19 @@
 #ifndef _MOCATRA_H
 #define _MOCATRA_H
 
+
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 
-#include "ray.h"
-#include "vec3.h"
-#include "image.h"
 
-/* constants */
+#include "vec3.h"
+
+
+/* global constants */
 static const float INF = INFINITY;
 static const float PI  = 3.14159f;
+
 
 static inline double
 degrees_to_radians(double degrees)
@@ -83,4 +85,6 @@ linear_to_gamma(float linear_component)
         return 0;
 }
 
+
 #endif /* _MOCATRA_H */
+

@@ -1,9 +1,12 @@
 /**
  * @brief camera.c
  */
+
 #include "camera.h"
 
+
 #include "mocatra.h"
+
 
 camera_t 
 camera_create(int img_width, int img_height)
