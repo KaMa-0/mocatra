@@ -1,13 +1,14 @@
 /**
  * @file camera.h
- * @brief Camera configuration and viewport ray calculation utilites.
+ * @brief Camera and viewport creation and configuration utility.
  */
 
 #ifndef _CAMERA_H
 #define _CAMERA_H
 
 
-#include "mocatra.h"
+#include "vec3.h"
+
 
 typedef struct camera {
         vec3_t center;
@@ -17,7 +18,8 @@ typedef struct camera {
 } camera_t;
 
 
-camera_t camera_init(int img_width, int img_height);
+camera_t camera_create(int img_width, int img_height);
 
 
 #endif /* _CAMERA_H */
+

@@ -43,6 +43,11 @@ vec3_length(vec3_t u)
 
 /* --------------------------------------------------------------------- */
 
+static inline vec3_t 
+v3(float x, float y, float z)
+{
+        return (vec3_t){x, y, z};
+}
 
 vec3_t vec3_add(const vec3_t u, const vec3_t v);
 vec3_t vec3_sub(const vec3_t u, const vec3_t v);

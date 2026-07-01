@@ -9,12 +9,8 @@
 #include "vec3.h"
 #include "ray.h"
 
-#include "hittable.h"
-#include "hittable_list.h"
-#include "sphere.h"
-#include "quad.h"
-#include "material.h"
 #include "camera.h"
+#include "world.h"
 
 
 int
@@ -24,9 +20,6 @@ main(void)
         pixel_t  px;  /* pixel containing r,g,b values */
 
         hittable_list_t* world;          /* world containing list of objects */
-        sphere_t*        ground;         /* big sphere serving as ground     */
-        sphere_t*        sphere_main;    /* main sphere of scene             */
-        vec3_t           sphere_center;  /* center vector for scene spheres  */
 
         material_t mat_ground;
         material_t mat_main;
@@ -43,7 +36,6 @@ main(void)
 
         char*    img_path; /* path to destination for final image render */
 
-        float    focal_length; /* camera focal length */
         float    aspect_ratio; /* aspect ratio of the final image render */
 
         float    vp_width,  vp_height;  /* viewport width and height       */
@@ -66,7 +58,6 @@ main(void)
         img_width       = image_width;
         samples_per_px  = samples_per_pixel;
         max_depth       = maximum_ray_depth;
-        focal_length    = 1.0f;
 
         /* ============= */
 
@@ -90,85 +81,15 @@ main(void)
 
         /* Camera */
 
-        cam = camera_init(img_width, img_height);
+        cam = camera_create(img_width, img_height);
 
         /* ------ */
 
 
         /* World */
 
-        world = hittable_list_create();
-        
-        hittable_list_init(world, 18);
-
-        material_t red   = {
-                .type = MAT_LAMBERTIAN, 
-                .albedo = {0.65f, 0.05f, 0.05f}
-        };
-        material_t white = {
-                .type = MAT_LAMBERTIAN, 
-                .albedo = {0.73f, 0.73f, 0.73f}
-        };
-        material_t green = {
-                .type = MAT_LAMBERTIAN, 
-                .albedo = {0.12f, 0.45f, 0.15f}
-        };
-        
-        material_t light = {
-                .type = MAT_DIFFUSE_LIGHT, 
-                .emission = {15.0f, 15.0f, 15.0f}
-        };
-
-        material_t polished_metal = {
-                .type = MAT_METAL,
-                .albedo = {0.85f, 0.85f, 0.85f}
-        };
-
-        quad_t* left_wall   = quad_create();
-        quad_t* right_wall  = quad_create();
-        quad_t* top_light   = quad_create();
-        quad_t* floor_wall  = quad_create();
-        quad_t* ceiling_wall= quad_create();
-        quad_t* back_wall   = quad_create();
-
-        quad_init(left_wall, (vec3_t){ 555, 0, 0 }, (vec3_t){ 0, 0, 555 }, 
-                  (vec3_t){ 0, 555, 0 }, green);
-
-        quad_init(right_wall, (vec3_t){ 0, 0, 0 }, (vec3_t){ 0, 0, 555 }, 
-                  (vec3_t){ 0, 555, 0 }, red);
-
-        quad_init(top_light, (vec3_t){ 213, 554, 227 }, (vec3_t){ 130, 0, 0 }, 
-                  (vec3_t){ 0, 0, 105 }, light);
-
-        quad_init(floor_wall, (vec3_t){ 0, 0, 0 }, (vec3_t){ 555, 0, 0 }, 
-                  (vec3_t){ 0, 0, 555 }, white);
-
-        quad_init(ceiling_wall, (vec3_t){ 0, 555, 0 }, (vec3_t){ 555, 0, 0 }, 
-                  (vec3_t){ 0, 0, 555 }, white);
-
-        quad_init(back_wall, (vec3_t){ 0, 0, 555 }, (vec3_t){ 555, 0, 0 }, 
-                  (vec3_t){ 0, 555, 0 }, white);
-
-        hittable_list_add(world, (hittable_t*)left_wall);
-        hittable_list_add(world, (hittable_t*)right_wall);
-        hittable_list_add(world, (hittable_t*)top_light);
-        hittable_list_add(world, (hittable_t*)floor_wall);
-        hittable_list_add(world, (hittable_t*)ceiling_wall);
-        hittable_list_add(world, (hittable_t*)back_wall);
-
-        hittable_list_add_box(world, 
-                              (vec3_t){0.0f, 0.0f, 0.0f}, 
-                              (vec3_t){165.0f, 165.0f, 165.0f}, 
-                              -18.0f, 
-                              (vec3_t){130.0f, 0.0f, 65.0f}, 
-                              white);
-
-        hittable_list_add_box(world, 
-                              (vec3_t){0.0f, 0.0f, 0.0f}, 
-                              (vec3_t){165.0f, 330.0f, 165.0f}, 
-                              15.0f, 
-                              (vec3_t){265.0f, 0.0f, 295.0f}, 
-                              white);
+        world = create_world(18);
+        init_world_cornell_box(world);
 
         /* ----- */
 
@@ -249,8 +170,7 @@ main(void)
 
         image_free(img);
 
-        hittable_list_cleanup(world);
-        free(world);
+        destroy_world(world);
 
         /* ------- */
 
