@@ -7,19 +7,19 @@
 
 
 /* relative path to output  */
-char* output_image_path   = "mocatra_image.ppm"; 
+char* output_image_path   = "mocatra_image.ppm";
 
 /* must be float value      */
-float image_aspect_ratio  = 1.0f / 1.0f;         
+float image_aspect_ratio  = 1.0f / 1.0f;
 
 /* width of output in pixel */
-int   image_width         = 600;                 
+int   image_width         = 600;
 
 /* number of samples/pixel  */
-int   samples_per_pixel   = 1000;                
+int   samples_per_pixel   = 100;
 
 /* iteration depth for ray  */
-int   maximum_ray_depth   = 50;                  
+int   maximum_ray_depth   = 3;
 
 
 /* -----------------------------------------
