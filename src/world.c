@@ -114,7 +114,7 @@ init_world_cornell_box(hittable_list_t* world)
 mocatra_error_t
 init_world_sphere_playground(hittable_list_t* world)
 {
-        
+        // TODO: add sphere world intialization for simple example scene
 
         if (world == NULL)
                 return MOCATRA_INVARG;
