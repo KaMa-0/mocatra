@@ -81,7 +81,7 @@ main(void)
 
         /* Camera */
 
-        cam = camera_create(img_width, img_height);
+        cam = camera_init(img_width, img_height);
 
         /* ------ */
 

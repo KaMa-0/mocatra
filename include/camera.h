@@ -18,7 +18,7 @@ typedef struct camera {
 } camera_t;
 
 
-camera_t camera_create(int img_width, int img_height);
+camera_t camera_init(int img_width, int img_height);
 
 
 #endif /* _CAMERA_H */

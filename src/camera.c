@@ -9,7 +9,7 @@
 
 
 camera_t 
-camera_create(int img_width, int img_height)
+camera_init(int img_width, int img_height)
 {
         camera_t cam;
         vec3_t   w, u, v, vp_u, vp_v, vp_upper_left;
