@@ -6,6 +6,7 @@
 
 
 #include "quad.h"
+#include "box.h"
 
 
 hittable_list_t*
