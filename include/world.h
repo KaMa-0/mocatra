@@ -1,6 +1,7 @@
 /**
- * @file world.h
- * @brief Utility for handling "world" list of objects which interact with ray.
+ * \file        world.h
+ * \brief       Utility for handling list of objects which interact with ray.
+ *              This list of objects is defined as a "world" (or scene).  
  */
 
 #ifndef _WORLD_H

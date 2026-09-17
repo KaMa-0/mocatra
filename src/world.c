@@ -1,5 +1,5 @@
 /**
- * @file world.c
+ * \file        world.c
  */
 
 #include "world.h"

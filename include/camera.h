@@ -1,6 +1,6 @@
 /**
- * @file camera.h
- * @brief Camera and viewport creation and configuration utility.
+ * \file        camera.h
+ * \brief       Camera and viewport creation and configuration utility.
  */
 
 #ifndef _CAMERA_H

@@ -1,5 +1,5 @@
 /**
- * @brief camera.c
+ * \file        camera.c
  */
 
 #include "camera.h"
