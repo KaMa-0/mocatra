@@ -73,6 +73,7 @@ main(void)
         img = image_create(img_width, img_height);
         if (img == NULL) {
                 printf("[ERROR] Failed to create image.\n");
+                return MOCATRA_ERROR;
         }
 
         /* ----- */
@@ -86,7 +87,14 @@ main(void)
         /* World */
 
         world = create_world(18);
-        init_world_cornell_box(world);
+        if (world == NULL) {
+                printf("[ERROR] Failed to create world scene.\n");
+                return MOCATRA_ERROR;
+        }
+        if (init_world_cornell_box(world) != MOCATRA_OK) {
+                printf("[ERROR] Failed to initialize world scene.\n");
+                return MOCATRA_ERROR;
+        }
 
         /* ----- */
 

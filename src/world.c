@@ -11,9 +11,14 @@ hittable_list_t*
 create_world(size_t max_obj)
 {
         hittable_list_t* world;
+        mocatra_error_t  result;
 
-        world = hittable_list_create();
-        hittable_list_init(world, max_obj);
+        world =  hittable_list_create();
+        result = hittable_list_init(world, max_obj);
+
+        if (result != MOCATRA_OK) {
+                return NULL;
+        }
 
         return world;
 }
@@ -25,7 +30,7 @@ destroy_world(hittable_list_t* world)
                 return;
         }
 
-        hittable_list_cleanup(world);
+        hittable_list_destroy(world);
         free(world);
 }
 

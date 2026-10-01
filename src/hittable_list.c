@@ -1,8 +1,10 @@
-#include <stdlib.h>
-
-#include "mocatra.h"
+/**
+ * \file        hittable_list.c
+ */
 
 #include "hittable_list.h"
+
+#include "mocatra_error.h"
 
 static uint8_t
 hittable_list_hit(const hittable_t* self, const ray_t r, float t_min,
@@ -42,16 +44,26 @@ hittable_list_create(void)
         return hl;
 }
 
-void
+mocatra_error_t
 hittable_list_init(hittable_list_t* list, int initial_capacity)
 {
         list->base.vtable = &list_vtable;
         list->size        = 0;
         list->capacity    = initial_capacity;
         list->objects     = malloc(sizeof(hittable_t*) * initial_capacity);
+
+        if (list->base.vtable == NULL || list->objects == NULL) {
+                return MOCATRA_ERROR;
+        }
+
+        if (list->capacity < 1) {
+                return MOCATRA_INVARG;
+        }
+
+        return MOCATRA_OK;
 }
 
-void
+mocatra_error_t
 hittable_list_add(hittable_list_t* list, hittable_t* object)
 {
         if (list->size == list->capacity) {
@@ -63,7 +75,7 @@ hittable_list_add(hittable_list_t* list, hittable_t* object)
 }
 
 void
-hittable_list_cleanup(hittable_list_t* list)
+hittable_list_destroy(hittable_list_t* list)
 {
         if (list == NULL) {
                 return;
