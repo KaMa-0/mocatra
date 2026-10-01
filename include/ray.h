@@ -11,19 +11,16 @@
  *
  */
 
-
 #ifndef _RAY_H
 #define _RAY_H
 
-
-#include "vec3.h"
 #include "image.h"
 #include "material.h"
+#include "vec3.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
-
 
 typedef struct hittable hittable_t;
 
@@ -32,7 +29,6 @@ typedef struct ray {
         vec3_t dir;
 } ray_t;
 
-
 const vec3_t ray_at(const ray_t r, float t);
 
 vec3_t ray_color(ray_t r, int depth, const hittable_t* world);
@@ -40,8 +36,8 @@ vec3_t ray_color(ray_t r, int depth, const hittable_t* world);
 float hit_sphere(const vec3_t center, float radius, const ray_t r);
 
 vec3_t material_emitted(material_t mat);
-float  material_scattering_pdf(material_t mat, vec3_t normal, 
-                               vec3_t scattered_dir);
+float
+material_scattering_pdf(material_t mat, vec3_t normal, vec3_t scattered_dir);
 
 #ifdef __cplusplus
 }

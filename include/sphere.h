@@ -11,32 +11,28 @@
  *
  */
 
-
 #ifndef _SPHERE_H
 #define _SPHERE_H
 
 #include <stdint.h>
 
-#include "vec3.h"
 #include "hittable.h"
 #include "material.h"
+#include "vec3.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-
 typedef struct sphere {
-    hittable_t  base;
-    vec3_t      center; 
-    float       radius;
-    material_t  mat;
+        hittable_t base;
+        vec3_t center;
+        float radius;
+        material_t mat;
 } sphere_t;
-
 
 sphere_t* sphere_create(void);
 
 void sphere_init(sphere_t* s, vec3_t center, float radius, material_t mat);
-
 
 #endif /* _SPHERE_H */

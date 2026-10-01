@@ -11,7 +11,6 @@
  *
  */
 
-
 #ifndef _VEC3_H
 #define _VEC3_H
 
@@ -21,11 +20,9 @@
 extern "C" {
 #endif /* __cplusplus */
 
-
 typedef struct vec3 {
         float x, y, z;
 } vec3_t;
-
 
 /* helper functions for derivation of length needed for unit vector calc */
 
@@ -43,7 +40,7 @@ vec3_length(vec3_t u)
 
 /* --------------------------------------------------------------------- */
 
-static inline vec3_t 
+static inline vec3_t
 v3(float x, float y, float z)
 {
         return (vec3_t){x, y, z};
@@ -63,7 +60,6 @@ vec3_t vec3_cmpnt_mult(const vec3_t u, const vec3_t v);
 vec3_t vec3_unit(const vec3_t u);
 
 vec3_t vec3_reflect(const vec3_t v, const vec3_t n);
-
 
 #ifdef __cplusplus
 }
