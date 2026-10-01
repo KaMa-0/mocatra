@@ -5,6 +5,7 @@
 typedef enum {
         MOCATRA_OK,
         MOCATRA_INVARG,
+        MOCATRA_ERROR,
 } mocatra_error_t;
 
 
