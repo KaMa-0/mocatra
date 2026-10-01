@@ -1,3 +1,6 @@
+# basis for format: github.com/MaJerle/c-code-style
+# with slight adaptations to match preferences
+
 ---
 AccessModifierOffset: -2
 AlignAfterOpenBracket: true
