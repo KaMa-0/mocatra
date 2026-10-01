@@ -15,13 +15,13 @@ vec3_t
 ray_color(ray_t r, int depth, const hittable_t* world)
 {
         hit_record_t rec;
-        ray_t scattered_ray;
-        vec3_t bounce_direction;
-        vec3_t emitted;
-        vec3_t incoming_col;
-        vec3_t attenuation;
-        float scattering_pdf;
-        float pdf;
+        ray_t        scattered_ray;
+        vec3_t       bounce_direction;
+        vec3_t       emitted;
+        vec3_t       incoming_col;
+        vec3_t       attenuation;
+        float        scattering_pdf;
+        float        pdf;
 
         if (depth <= 0) {
                 return (vec3_t){
@@ -56,7 +56,7 @@ ray_color(ray_t r, int depth, const hittable_t* world)
 
                 scattered_ray = (ray_t){
                         .orig = rec.p,
-                        .dir = bounce_direction,
+                        .dir  = bounce_direction,
                 };
                 incoming_col = ray_color(scattered_ray, depth - 1, world);
 
@@ -72,12 +72,12 @@ ray_color(ray_t r, int depth, const hittable_t* world)
 
                 scattered_ray = (ray_t){
                         .orig = rec.p,
-                        .dir = bounce_direction,
+                        .dir  = bounce_direction,
                 };
 
                 scattering_pdf = material_scattering_pdf(rec.mat, rec.normal,
                                                          scattered_ray.dir);
-                pdf = scattering_pdf;
+                pdf            = scattering_pdf;
 
                 if (pdf <= 0.0f) {
                         return emitted;

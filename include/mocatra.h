@@ -9,7 +9,7 @@
 
 /* global constants */
 static const float INF = INFINITY;
-static const float PI = 3.14159f;
+static const float PI  = 3.14159f;
 
 static inline double
 degrees_to_radians(double degrees)
@@ -37,9 +37,9 @@ static inline vec3_t
 random_unit_vector(void)
 {
         vec3_t p;
-        float lensq;
+        float  lensq;
         while (1) {
-                p = random_vec3_t(-1, 1);
+                p     = random_vec3_t(-1, 1);
                 lensq = vec3_len_squared(p);
                 if (1e-30f < lensq && lensq <= 1.0f) {
                         return vec3_scal(p, 1.0f / sqrt(lensq));

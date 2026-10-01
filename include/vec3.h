@@ -52,7 +52,7 @@ vec3_t vec3_sub(const vec3_t u, const vec3_t v);
 vec3_t vec3_scal(const vec3_t u, float t);
 vec3_t vec3_neg(const vec3_t u);
 
-float vec3_dot(const vec3_t u, const vec3_t v);
+float  vec3_dot(const vec3_t u, const vec3_t v);
 vec3_t vec3_cross(const vec3_t u, const vec3_t v);
 
 vec3_t vec3_cmpnt_mult(const vec3_t u, const vec3_t v);

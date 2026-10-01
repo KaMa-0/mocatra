@@ -9,12 +9,12 @@ AlignConsecutiveMacros:
   Enabled: true
   AcrossEmptyLines: true
   AcrossComments: true
-AlignConsecutiveAssignments: None
+AlignConsecutiveAssignments: true
 AlignConsecutiveBitFields:
   Enabled: true
   AcrossEmptyLines: true
   AcrossComments: true
-AlignConsecutiveDeclarations: None
+AlignConsecutiveDeclarations: true
 AlignEscapedNewlines: Right
 AlignOperands: Align
 SortIncludes: true

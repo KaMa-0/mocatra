@@ -12,10 +12,10 @@ void
 hittable_list_add_box(hittable_list_t* list, vec3_t p0, vec3_t p1,
                       float angle_degrees, vec3_t translation, material_t mat)
 {
-        vec3_t min_pt, max_pt;
-        vec3_t dx, dy, dz;
+        vec3_t          min_pt, max_pt;
+        vec3_t          dx, dy, dz;
         quad_face_def_t local_faces[6];
-        float radians, sin_theta, cos_theta;
+        float           radians, sin_theta, cos_theta;
 
         if (list == NULL) {
                 return;
@@ -43,33 +43,33 @@ hittable_list_add_box(hittable_list_t* list, vec3_t p0, vec3_t p1,
         /* Right */
         local_faces[1] = (quad_face_def_t){.origin = {max_pt.x, min_pt.y,
                                                       max_pt.z},
-                                           .u = vec3_scal(dz, -1.0f),
-                                           .v = dy};
+                                           .u      = vec3_scal(dz, -1.0f),
+                                           .v      = dy};
         /* Back */
         local_faces[2] = (quad_face_def_t){.origin = {max_pt.x, min_pt.y,
                                                       min_pt.z},
-                                           .u = vec3_scal(dx, -1.0f),
-                                           .v = dy};
+                                           .u      = vec3_scal(dx, -1.0f),
+                                           .v      = dy};
         /* Left */
         local_faces[3] = (quad_face_def_t){
                 .origin = {min_pt.x, min_pt.y, min_pt.z}, .u = dz, .v = dy};
         /* Top */
         local_faces[4] = (quad_face_def_t){.origin = {min_pt.x, max_pt.y,
                                                       max_pt.z},
-                                           .u = dx,
-                                           .v = vec3_scal(dz, -1.0f)};
+                                           .u      = dx,
+                                           .v      = vec3_scal(dz, -1.0f)};
         /* Bottom */
         local_faces[5] = (quad_face_def_t){
                 .origin = {min_pt.x, min_pt.y, min_pt.z}, .u = dx, .v = dz};
 
-        radians = angle_degrees * PI / 180.0f;
+        radians   = angle_degrees * PI / 180.0f;
         sin_theta = sinf(radians);
         cos_theta = cosf(radians);
 
         for (size_t idx = 0; idx < 6; ++idx) {
                 quad_face_def_t f = local_faces[idx];
-                vec3_t w_q, w_u, w_v;
-                quad_t* q;
+                vec3_t          w_q, w_u, w_v;
+                quad_t*         q;
 
                 /* Y-Axis Rotation + Translation */
                 w_q = (vec3_t){

@@ -16,14 +16,14 @@ int
 main(void)
 {
         image_t* img; /* image containing image buffer */
-        pixel_t px;   /* pixel containing r,g,b values */
+        pixel_t  px;  /* pixel containing r,g,b values */
 
         hittable_list_t* world; /* world containing list of objects */
 
         material_t mat_ground;
         material_t mat_main;
 
-        ray_t ray;            /* ray                          */
+        ray_t  ray;           /* ray                          */
         vec3_t ray_direction; /* direction of ray in 3d space */
 
         camera_t cam;
@@ -37,11 +37,11 @@ main(void)
 
         float aspect_ratio; /* aspect ratio of the final image render */
 
-        float vp_width, vp_height; /* viewport width and height       */
-        int img_width, img_height; /* image width and height (min. 1) */
+        float vp_width, vp_height;   /* viewport width and height       */
+        int   img_width, img_height; /* image width and height (min. 1) */
 
         float pixel_samples_scale; /* scale factor maps sum to 0.0-1.0 */
-        int samples_per_px;        /* number of samples per pixel      */
+        int   samples_per_px;      /* number of samples per pixel      */
 
         int max_depth;
 
@@ -51,11 +51,11 @@ main(void)
         /* configuration */
 
         /* values taken over from the central config file */
-        img_path = output_image_path;
-        aspect_ratio = image_aspect_ratio;
-        img_width = image_width;
+        img_path       = output_image_path;
+        aspect_ratio   = image_aspect_ratio;
+        img_width      = image_width;
         samples_per_px = samples_per_pixel;
-        max_depth = maximum_ray_depth;
+        max_depth      = maximum_ray_depth;
 
         /* ============= */
 
@@ -103,7 +103,7 @@ main(void)
                         };
 
                         for (int s = 0; s < samples_per_px; s++) {
-                                offset = sample_square();
+                                offset           = sample_square();
                                 sample_pixel_loc = vec3_add(
                                         cam.px_origin,
                                         vec3_add(vec3_scal(cam.px_delta_u,
@@ -113,9 +113,9 @@ main(void)
                                                          (float)y + offset.y)));
                                 ray_direction = vec3_sub(sample_pixel_loc,
                                                          cam.center);
-                                ray = (ray_t){
+                                ray           = (ray_t){
                                         .orig = cam.center,
-                                        .dir = ray_direction,
+                                        .dir  = ray_direction,
                                 };
 
                                 sample_col = ray_color(ray, max_depth,

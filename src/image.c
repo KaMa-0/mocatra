@@ -44,7 +44,7 @@ image_create(uint32_t width, uint32_t height)
                 return NULL;
         }
 
-        img->width = width;
+        img->width  = width;
         img->height = height;
 
         img->buffer = calloc(width * height, sizeof(pixel_t));

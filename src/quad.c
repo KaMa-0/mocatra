@@ -14,8 +14,8 @@ quad_hit(const hittable_t* self, const ray_t r, float t_min, float t_max,
          hit_record_t* rec)
 {
         const quad_t* quad;
-        vec3_t intersection_point, planar_hitpoint_vector;
-        float denom, t, alpha, beta;
+        vec3_t        intersection_point, planar_hitpoint_vector;
+        float         denom, t, alpha, beta;
 
         quad = (const quad_t*)self;
 
@@ -30,18 +30,18 @@ quad_hit(const hittable_t* self, const ray_t r, float t_min, float t_max,
                 return 0;
         }
 
-        intersection_point = vec3_add(r.orig, vec3_scal(r.dir, t));
+        intersection_point     = vec3_add(r.orig, vec3_scal(r.dir, t));
         planar_hitpoint_vector = vec3_sub(intersection_point, quad->q);
 
         alpha = vec3_dot(quad->w, vec3_cross(planar_hitpoint_vector, quad->v));
-        beta = vec3_dot(quad->w, vec3_cross(quad->u, planar_hitpoint_vector));
+        beta  = vec3_dot(quad->w, vec3_cross(quad->u, planar_hitpoint_vector));
 
         if (alpha < 0.0f || alpha > 1.0f || beta < 0.0f || beta > 1.0f) {
                 return 0;
         }
 
-        rec->t = t;
-        rec->p = intersection_point;
+        rec->t   = t;
+        rec->p   = intersection_point;
         rec->mat = quad->mat;
 
         hit_record_set_face_normal(rec, r, quad->normal);
@@ -57,7 +57,7 @@ quad_destroy(hittable_t* self)
 }
 
 static const hittable_vtable_t quad_vtable = {
-        .hit = quad_hit,
+        .hit     = quad_hit,
         .destroy = quad_destroy,
 };
 
@@ -85,14 +85,14 @@ quad_init(quad_t* quad, vec3_t q, vec3_t u, vec3_t v, material_t mat)
         }
 
         quad->base.vtable = &quad_vtable;
-        quad->q = q;
-        quad->u = u;
-        quad->v = v;
-        quad->mat = mat;
+        quad->q           = q;
+        quad->u           = u;
+        quad->v           = v;
+        quad->mat         = mat;
 
-        n = vec3_cross(u, v);
+        n            = vec3_cross(u, v);
         quad->normal = vec3_unit(n);
-        quad->d = vec3_dot(quad->normal, q);
+        quad->d      = vec3_dot(quad->normal, q);
 
         quad->w = vec3_scal(n, 1.0f / vec3_len_squared(n));
 }

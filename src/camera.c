@@ -10,21 +10,21 @@ camera_t
 camera_init(int img_width, int img_height)
 {
         camera_t cam;
-        vec3_t w, u, v, vp_u, vp_v, vp_upper_left;
-        float theta, h, focal_length, vp_width, vp_height;
+        vec3_t   w, u, v, vp_u, vp_v, vp_upper_left;
+        float    theta, h, focal_length, vp_width, vp_height;
 
         const vec3_t lookfrom = {278.0f, 278.0f, -800.0f};
-        const vec3_t lookat = {278.0f, 278.0f, 0.0f};
-        const vec3_t vup = {0.0f, 1.0f, 0.0f};
+        const vec3_t lookat   = {278.0f, 278.0f, 0.0f};
+        const vec3_t vup      = {0.0f, 1.0f, 0.0f};
 
         const float vfov = 40.0f;
 
         theta = vfov * (float)PI / 180.0f;
-        h = tanf(theta / 2.0f);
+        h     = tanf(theta / 2.0f);
 
         focal_length = vec3_length(vec3_sub(lookfrom, lookat));
-        vp_height = 2.0f * h * focal_length;
-        vp_width = vp_height * ((float)(img_width) / img_height);
+        vp_height    = 2.0f * h * focal_length;
+        vp_width     = vp_height * ((float)(img_width) / img_height);
 
         w = vec3_unit(vec3_sub(lookfrom, lookat));
         u = vec3_unit(vec3_cross(vup, w));

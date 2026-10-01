@@ -34,10 +34,10 @@ typedef struct image {
 } image_t;
 
 image_t* image_create(uint32_t width, uint32_t height);
-void image_free(image_t* img);
+void     image_free(image_t* img);
 
 pixel_t* image_px_get(image_t* img, uint32_t x, uint32_t y);
-int image_px_set(image_t* img, uint32_t x, uint32_t y, pixel_t px);
+int      image_px_set(image_t* img, uint32_t x, uint32_t y, pixel_t px);
 
 size_t image_size(const image_t* img);
 size_t image_bufsize(const image_t* img);

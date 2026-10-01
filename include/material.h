@@ -11,8 +11,8 @@ typedef enum mat_type {
 
 typedef struct material {
         mat_type_t type;
-        vec3_t albedo;
-        vec3_t emission;
+        vec3_t     albedo;
+        vec3_t     emission;
 } material_t;
 
 #endif /* _MOCATRA_H */

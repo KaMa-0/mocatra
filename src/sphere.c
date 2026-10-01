@@ -10,10 +10,10 @@ sphere_hit(const hittable_t* self, const ray_t r, float t_min, float t_max,
            hit_record_t* rec)
 {
         const sphere_t* s;
-        vec3_t oc, outward_normal;
-        float a, h, c, discriminant, sqrtd, root;
+        vec3_t          oc, outward_normal;
+        float           a, h, c, discriminant, sqrtd, root;
 
-        s = (const sphere_t*)self;
+        s  = (const sphere_t*)self;
         oc = vec3_sub(s->center, r.orig);
 
         a = vec3_len_squared(r.dir);
@@ -36,8 +36,8 @@ sphere_hit(const hittable_t* self, const ray_t r, float t_min, float t_max,
                 }
         }
 
-        rec->t = root;
-        rec->p = ray_at(r, root);
+        rec->t         = root;
+        rec->p         = ray_at(r, root);
         outward_normal = vec3_scal(vec3_sub(rec->p, s->center),
                                    (1.0f / s->radius));
         hit_record_set_face_normal(rec, r, outward_normal);
@@ -54,7 +54,7 @@ sphere_destroy(hittable_t* self)
 }
 
 static const hittable_vtable_t sphere_vtable = {
-        .hit = sphere_hit,
+        .hit     = sphere_hit,
         .destroy = sphere_destroy,
 };
 
@@ -79,7 +79,7 @@ sphere_init(sphere_t* s, vec3_t center, float radius, material_t mat)
         }
 
         s->base.vtable = &sphere_vtable;
-        s->center = center;
-        s->radius = (radius > 0) ? radius : 0;
-        s->mat = mat;
+        s->center      = center;
+        s->radius      = (radius > 0) ? radius : 0;
+        s->mat         = mat;
 }

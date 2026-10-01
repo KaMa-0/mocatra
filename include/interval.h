@@ -56,7 +56,7 @@ interval_clamp(const interval_t i, float x)
         return x;
 }
 
-static const interval_t interval_empty = {.min = INF, .max = -INF};
+static const interval_t interval_empty    = {.min = INF, .max = -INF};
 static const interval_t interval_universe = {.min = -INF, .max = INF};
 
 #ifdef __cplusplus

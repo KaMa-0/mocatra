@@ -38,18 +38,18 @@ init_world_cornell_box(hittable_list_t* world)
         vec3_t temp_q, temp_u, temp_v;
 
         /* diffuse light material */
-        const material_t mat_diff_light = {.type = MAT_DIFFUSE_LIGHT,
+        const material_t mat_diff_light = {.type     = MAT_DIFFUSE_LIGHT,
                                            .emission = (vec3_t){15.0f, 15.0f,
                                                                 15.0f}};
 
         /* diffuse materials */
-        const material_t mat_diff_red = {.type = MAT_LAMBERTIAN,
-                                         .albedo = (vec3_t){0.65f, 0.05f,
-                                                            0.05f}};
-        const material_t mat_diff_green = {.type = MAT_LAMBERTIAN,
+        const material_t mat_diff_red   = {.type   = MAT_LAMBERTIAN,
+                                           .albedo = (vec3_t){0.65f, 0.05f,
+                                                              0.05f}};
+        const material_t mat_diff_green = {.type   = MAT_LAMBERTIAN,
                                            .albedo = (vec3_t){0.12f, 0.45f,
                                                               0.15f}};
-        const material_t mat_diff_white = {.type = MAT_LAMBERTIAN,
+        const material_t mat_diff_white = {.type   = MAT_LAMBERTIAN,
                                            .albedo = (vec3_t){0.73f, 0.73f,
                                                               0.73f}};
 
@@ -58,12 +58,12 @@ init_world_cornell_box(hittable_list_t* world)
         }
 
         /* quad creation */
-        light_top = quad_create();
-        wall_floor = quad_create();
+        light_top    = quad_create();
+        wall_floor   = quad_create();
         wall_ceiling = quad_create();
-        wall_back = quad_create();
-        wall_right = quad_create();
-        wall_left = quad_create();
+        wall_back    = quad_create();
+        wall_right   = quad_create();
+        wall_left    = quad_create();
 
         /* init quads (rectangle shapes) */
         quad_init(light_top, v3(213, 554, 227), v3(130, 0, 0), v3(0, 0, 105),

@@ -13,10 +13,10 @@
 #include "mocatra_error.h"
 
 typedef struct hittable_list {
-        hittable_t base;
+        hittable_t   base;
         hittable_t** objects;
-        int size;
-        int capacity;
+        int          size;
+        int          capacity;
 } hittable_list_t;
 
 hittable_list_t* hittable_list_create(void);

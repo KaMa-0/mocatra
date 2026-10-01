@@ -26,8 +26,8 @@ extern "C" {
 
 typedef struct sphere {
         hittable_t base;
-        vec3_t center;
-        float radius;
+        vec3_t     center;
+        float      radius;
         material_t mat;
 } sphere_t;
 

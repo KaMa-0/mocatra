@@ -15,10 +15,10 @@
 #include "vec3.h"
 
 typedef struct hit_record {
-        vec3_t p;
-        vec3_t normal;
-        float t;
-        int8_t front_face;
+        vec3_t     p;
+        vec3_t     normal;
+        float      t;
+        int8_t     front_face;
         material_t mat;
 } hit_record_t;
 

@@ -9,20 +9,20 @@ hittable_list_hit(const hittable_t* self, const ray_t r, float t_min,
                   float t_max, hit_record_t* rec)
 {
         hittable_list_t* list;
-        hit_record_t temp_rec;
-        uint8_t hit_anything;
-        float closest_so_far;
+        hit_record_t     temp_rec;
+        uint8_t          hit_anything;
+        float            closest_so_far;
 
-        list = (hittable_list_t*)self;
-        hit_anything = 0;
+        list           = (hittable_list_t*)self;
+        hit_anything   = 0;
         closest_so_far = t_max;
 
         for (int i = 0; i < list->size; i++) {
                 if (list->objects[i]->vtable->hit(list->objects[i], r, t_min,
                                                   closest_so_far, &temp_rec)) {
-                        hit_anything = 1;
+                        hit_anything   = 1;
                         closest_so_far = temp_rec.t;
-                        *rec = temp_rec;
+                        *rec           = temp_rec;
                 }
         }
 
@@ -46,9 +46,9 @@ void
 hittable_list_init(hittable_list_t* list, int initial_capacity)
 {
         list->base.vtable = &list_vtable;
-        list->size = 0;
-        list->capacity = initial_capacity;
-        list->objects = malloc(sizeof(hittable_t*) * initial_capacity);
+        list->size        = 0;
+        list->capacity    = initial_capacity;
+        list->objects     = malloc(sizeof(hittable_t*) * initial_capacity);
 }
 
 void
@@ -83,6 +83,6 @@ hittable_list_cleanup(hittable_list_t* list)
                 list->objects = NULL;
         }
 
-        list->size = 0;
+        list->size     = 0;
         list->capacity = 0;
 }
