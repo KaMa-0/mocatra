@@ -19,7 +19,7 @@ int   image_width         = 600;
 int   samples_per_pixel   = 100;
 
 /* iteration depth for ray  */
-int   maximum_ray_depth   = 3;
+int   maximum_ray_depth   = 10;
 
 
 /* -----------------------------------------
