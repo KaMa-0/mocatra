@@ -92,27 +92,6 @@ ray_color(ray_t r, int depth, const hittable_t* world)
         }
 }
 
-float
-hit_sphere(const vec3_t center, float radius, const ray_t r)
-{
-        vec3_t oc;
-        float a, h, c, discriminant;
-
-        oc = vec3_sub(center, r.orig);
-
-        a = vec3_len_squared(r.dir);
-        h = vec3_dot(r.dir, oc);
-        c = vec3_len_squared(oc) - radius * radius;
-
-        discriminant = h * h - a * c;
-
-        if (discriminant < 0) {
-                return -1.0;
-        } else {
-                return ((h - sqrt(discriminant)) / a);
-        }
-}
-
 vec3_t 
 material_emitted(material_t mat)
 {
