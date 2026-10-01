@@ -13,7 +13,7 @@ create_world(size_t max_obj)
         hittable_list_t* world;
         mocatra_error_t  result;
 
-        world =  hittable_list_create();
+        world  = hittable_list_create();
         result = hittable_list_init(world, max_obj);
 
         if (result != MOCATRA_OK) {

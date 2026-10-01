@@ -21,7 +21,7 @@ typedef struct hittable_list {
 
 hittable_list_t* hittable_list_create(void);
 void             hittable_list_destroy(hittable_list_t* list);
-mocatra_error_t  hittable_list_init(hittable_list_t* list, int initial_capacity);
-mocatra_error_t  hittable_list_add(hittable_list_t* list, hittable_t* object);
+mocatra_error_t hittable_list_init(hittable_list_t* list, int initial_capacity);
+mocatra_error_t hittable_list_add(hittable_list_t* list, hittable_t* object);
 
 #endif /* _HITTABLE_LIST_H */
