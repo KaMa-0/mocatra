@@ -1,7 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
+/**
+ * \file        image.c
+ */
 
 #include "image.h"
+
+#include <stdio.h>
+#include <stdlib.h>
 
 static inline uint8_t
 image_is_valid(const image_t* img)
@@ -69,34 +73,34 @@ image_px_get(image_t* img, uint32_t x, uint32_t y)
         return &img->buffer[y * img->width + x];
 }
 
-int
+mocatra_error_t
 image_px_set(image_t* img, uint32_t x, uint32_t y, pixel_t px)
 {
         if (!image_is_valid(img)) {
-                return -1;
+                return MOCATRA_INVARG;
         }
 
         if (x >= img->width || y >= img->height) {
-                return -2;
+                return MOCATRA_INVARG;
         }
 
         img->buffer[y * img->width + x] = px;
-        return 0;
+        return MOCATRA_OK;
 }
 
-int
+mocatra_error_t
 image_write_ppm(image_t* img, const char* path)
 {
         FILE* fp;
 
         if (!image_is_valid(img)) {
-                return -1;
+                return MOCATRA_INVARG;
         }
 
         fp = fopen(path, "wb");
 
         if (fp == NULL) {
-                return -2;
+                return MOCATRA_NOMEM;
         }
 
         /* Write PPM (P6)-Header */
@@ -117,11 +121,11 @@ image_write_ppm(image_t* img, const char* path)
 
         fclose(fp);
 
-        return 0;
+        return MOCATRA_OK;
 }
 
 void
-image_free(image_t* img)
+image_destroy(image_t* img)
 {
         if (img == NULL) {
                 return;

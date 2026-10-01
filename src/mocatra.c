@@ -141,7 +141,10 @@ main(void)
                                 .b = linear_to_gamma(accumulated_color.z),
                         };
 
-                        image_px_set(img, x, y, px);
+                        if (image_px_set(img, x, y, px) != MOCATRA_OK) {
+                                printf("[ERROR] Failed setting pixel value.\n");
+                                return MOCATRA_ERROR;
+                        }
                 }
 
                 /* progress indicator */
@@ -165,7 +168,7 @@ main(void)
 
         if (image_write_ppm(img, img_path) != 0) {
                 fprintf(stderr, "Failed to write image\n");
-                image_free(img);
+                image_destroy(img);
                 return 1;
         }
 
@@ -173,7 +176,7 @@ main(void)
 
         /* Cleanup */
 
-        image_free(img);
+        image_destroy(img);
 
         destroy_world(world);
 
