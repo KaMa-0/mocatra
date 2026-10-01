@@ -21,7 +21,7 @@ endif
 DST := $(DST_DIR)/mocatra_$(OS_NAME)$(EXE_EXT)
 
 # 2. Base Compiler Flags
-CFLAGS := -I$(INC) -I. -std=c99
+CFLAGS := -I$(INC) -I. -std=c99 -Wunused-function
 LIBS := -lm
 
 # 3. Target-Specific Flags 
