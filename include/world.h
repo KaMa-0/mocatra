@@ -16,7 +16,6 @@ hittable_list_t* create_world(size_t max_obj);
 void             destroy_world(hittable_list_t* world);
 
 mocatra_error_t  init_world_cornell_box(hittable_list_t* world);
-mocatra_error_t  init_world_sphere_playground(hittable_list_t* world);
 
 
 #endif /* _WORLD_H */
