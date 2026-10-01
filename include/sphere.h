@@ -36,11 +36,7 @@ typedef struct sphere {
 
 sphere_t* sphere_create(void);
 
-void sphere_init(sphere_t* s, vec3_t center, float radius);
+void sphere_init(sphere_t* s, vec3_t center, float radius, material_t mat);
 
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* _SPHERE_H */

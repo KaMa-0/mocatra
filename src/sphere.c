@@ -25,7 +25,7 @@ sphere_hit(const hittable_t* self, const ray_t r,
         if (discriminant < 0)
                 return 0; /* false */
 
-        sqrtd = sqrt(discriminant);
+        sqrtd = sqrtf(discriminant);
 
         root = (h - sqrtd) / a;
         if (root <= t_min || t_max <= root) {
@@ -60,16 +60,22 @@ sphere_t*
 sphere_create(void)
 {
         sphere_t* s;
+
         s = malloc(sizeof(sphere_t));
         if (s == NULL)
                 printf("[ERROR] Memory Allocation failed for sphere_t\n");
+
         return s;
 }
 
 void
-sphere_init(sphere_t* s, vec3_t center, float radius)
+sphere_init(sphere_t* s, vec3_t center, float radius, material_t mat)
 {
+        if (s == NULL)
+                return;
+
         s->base.vtable = &sphere_vtable;
         s->center = center;
         s->radius = (radius > 0) ? radius : 0;
+        s->mat    = mat;
 }
