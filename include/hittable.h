@@ -1,13 +1,7 @@
 /**
  *
- *  \file   hittable.h
- *  \brief  Abstract hittable class for any object which a ray can "hit".
- *
- */
-
-/*
- *  Author:  KaMa (https://github.com/KaMa-0/
- *                 https://gitlab.com/KaMa-0/)
+ *  \file       hittable.h
+ *  \brief      Abstract hittable class for any object which a ray can "hit".
  *
  */
 
@@ -15,15 +9,12 @@
 #ifndef _HITTABLE_H
 #define _HITTABLE_H
 
+
 #include <stdint.h>
 
 #include "vec3.h"
 #include "ray.h"
 #include "material.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
 
 
 typedef struct hit_record {
@@ -46,6 +37,7 @@ struct hittable {
     const hittable_vtable_t* vtable;
 };
 
+
 static inline void
 hit_record_set_face_normal(hit_record_t* rec, const ray_t r, 
                            const vec3_t outward_normal)
@@ -57,8 +49,5 @@ hit_record_set_face_normal(hit_record_t* rec, const ray_t r,
         rec->normal = vec3_neg(outward_normal);
 }
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
 #endif /* _HITTABLE_H */
+
