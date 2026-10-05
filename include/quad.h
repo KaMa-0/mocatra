@@ -21,8 +21,8 @@ typedef struct quad {
         float      d;
 } quad_t;
 
-quad_t* quad_create(void);
-
-void quad_init(quad_t* quad, vec3_t q, vec3_t u, vec3_t v, material_t mat);
+quad_t*         quad_create(void);
+mocatra_error_t quad_init(quad_t* quad, vec3_t q, vec3_t u, vec3_t v,
+                          material_t mat);
 
 #endif /* _QUAD_H */

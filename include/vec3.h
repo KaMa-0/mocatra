@@ -26,25 +26,16 @@ typedef struct vec3 {
 
 /* helper functions for derivation of length needed for unit vector calc */
 
-static inline float
-vec3_len_squared(vec3_t u)
+static inline float vec3_len_squared(vec3_t u)
 {
         return u.x * u.x + u.y * u.y + u.z * u.z;
 }
 
-static inline float
-vec3_length(vec3_t u)
-{
-        return sqrt(vec3_len_squared(u));
-}
+static inline float vec3_length(vec3_t u) { return sqrt(vec3_len_squared(u)); }
 
 /* --------------------------------------------------------------------- */
 
-static inline vec3_t
-v3(float x, float y, float z)
-{
-        return (vec3_t){x, y, z};
-}
+static inline vec3_t v3(float x, float y, float z) { return (vec3_t){x, y, z}; }
 
 vec3_t vec3_add(const vec3_t u, const vec3_t v);
 vec3_t vec3_sub(const vec3_t u, const vec3_t v);

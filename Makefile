@@ -48,5 +48,9 @@ debug:
 run:
 	@$(DST)
 
+format:
+	clang-format -i src/*.c include/*.h
+	ctags -R --languages=C,C++ --extras=+q --fields=+iaS -f tags .
+
 clean:
 	rm -f test/* $(DST_DIR)/*

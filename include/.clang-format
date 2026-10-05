@@ -1,0 +1,5 @@
+BasedOnStyle: InheritParentConfig
+AlwaysBreakAfterReturnType: None
+AlwaysBreakAfterDefinitionReturnType: None
+AlignConsecutiveDeclarations: true
+PenaltyReturnTypeOnItsOwnLine: 200
