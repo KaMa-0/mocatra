@@ -70,13 +70,13 @@ quad_create(void)
         return quad;
 }
 
-void
+mocatra_error_t
 quad_init(quad_t* quad, vec3_t q, vec3_t u, vec3_t v, material_t mat)
 {
         vec3_t n;
 
         if (quad == NULL) {
-                return;
+                return MOCATRA_ERROR;
         }
 
         quad->base.vtable = &quad_vtable;
@@ -90,4 +90,6 @@ quad_init(quad_t* quad, vec3_t q, vec3_t u, vec3_t v, material_t mat)
         quad->d      = vec3_dot(quad->normal, q);
 
         quad->w = vec3_scal(n, 1.0f / vec3_len_squared(n));
+
+        return MOCATRA_OK;
 }
