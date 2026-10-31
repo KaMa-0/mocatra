@@ -5,7 +5,7 @@
 _Computer Science and Digital Communications_), which aims to implement a 
 monte carlo path tracer from scratch, in the C programming language.  
 
-![Cornell Box render using mocatra path tracer](https://raw.githubusercontent.com/KaMa-0/mocatra/refs/heads/main/examples/mocatra_image_demo_v1.0.0-alpha.png)  
+![Cornell Box render using mocatra path tracer](./examples/cornell_v1.0.0_highres.png)  
 
 ---  
 
