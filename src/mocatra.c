@@ -61,7 +61,9 @@ main(void)
 
         /* Random generator seeding */
 
-        srand((unsigned int)time(NULL));
+        const char* s = getenv("MOCATRA_SEED");
+        srand(s ? (unsigned int)strtoul(s, NULL, 10)
+                : (unsigned int)time(NULL));
 
         /* ------------------------ */
 

@@ -52,5 +52,14 @@ format:
 	clang-format -i src/*.c include/*.h
 	ctags -R --languages=C,C++ --extras=+q --fields=+iaS -f tags .
 
+BASELINE = test/baseline_original.ppm
+OUT = mocatra_image.ppm
+
+regression:
+	MOCATRA_SEED=43 $(DST)
+	python3 tools/compare_ppm.py $(BASELINE) $(OUT)
+
+test: regression
+
 clean:
 	rm -f test/* $(DST_DIR)/*
