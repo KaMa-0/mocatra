@@ -72,6 +72,8 @@ hittable_list_add(hittable_list_t* list, hittable_t* object)
                                         sizeof(hittable_t*) * list->capacity);
         }
         list->objects[list->size++] = object;
+
+        return MOCATRA_OK;
 }
 
 void
