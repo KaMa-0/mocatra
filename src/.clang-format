@@ -1,0 +1,3 @@
+BasedOnStyle: InheritParentConfig
+AlwaysBreakAfterReturnType: AllDefinitions
+AlwaysBreakAfterDefinitionReturnType: true

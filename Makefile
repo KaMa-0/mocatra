@@ -21,7 +21,7 @@ endif
 DST := $(DST_DIR)/mocatra_$(OS_NAME)$(EXE_EXT)
 
 # 2. Base Compiler Flags
-CFLAGS := -I$(INC) -I. -std=c99
+CFLAGS := -I$(INC) -I. -std=c99 -Wunused-function
 LIBS := -lm
 
 # 3. Target-Specific Flags 
@@ -47,6 +47,19 @@ debug:
 
 run:
 	@$(DST)
+
+format:
+	clang-format -i src/*.c include/*.h
+	ctags -R --languages=C,C++ --extras=+q --fields=+iaS -f tags .
+
+BASELINE = test/baseline_original.ppm
+OUT = mocatra_image.ppm
+
+regression:
+	MOCATRA_SEED=43 $(DST)
+	python3 tools/compare_ppm.py $(BASELINE) $(OUT)
+
+test: regression
 
 clean:
 	rm -f test/* $(DST_DIR)/*
