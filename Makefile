@@ -27,7 +27,7 @@ DST := $(DST_DIR)/mocatra_$(OS_NAME)$(EXE_EXT)
 
 # 2. Base Compiler & Flags
 CC      := gcc
-CFLAGS  := -I$(INC_DIR) -I. -std=c99 -Wunused-function
+CFLAGS  := -I$(INC_DIR) -I. -std=c11 -Wunused-function -Wall -Wextra -Wpedantic
 LIBS    := -lm
 
 .PHONY: default all debug run clean format test regression baseline-update
