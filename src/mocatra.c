@@ -20,9 +20,6 @@ main(void)
 
         hittable_list_t* world; /* world containing list of objects */
 
-        material_t mat_ground;
-        material_t mat_main;
-
         ray_t  ray;           /* ray                          */
         vec3_t ray_direction; /* direction of ray in 3d space */
 
@@ -37,8 +34,7 @@ main(void)
 
         float aspect_ratio; /* aspect ratio of the final image render */
 
-        float vp_width, vp_height;   /* viewport width and height       */
-        int   img_width, img_height; /* image width and height (min. 1) */
+        int img_width, img_height; /* image width and height (min. 1) */
 
         float pixel_samples_scale; /* scale factor maps sum to 0.0-1.0 */
         int   samples_per_px;      /* number of samples per pixel      */

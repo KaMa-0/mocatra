@@ -29,7 +29,7 @@ typedef struct ray {
         vec3_t dir;
 } ray_t;
 
-const vec3_t ray_at(const ray_t r, float t);
+vec3_t ray_at(const ray_t r, float t);
 
 vec3_t ray_color(ray_t r, int depth, const hittable_t* world);
 

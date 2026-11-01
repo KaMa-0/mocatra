@@ -40,8 +40,6 @@ init_world_cornell_box(hittable_list_t* world)
         quad_t *light_top, *wall_floor, *wall_ceiling, *wall_back, *wall_left,
                 *wall_right;
 
-        vec3_t temp_q, temp_u, temp_v;
-
         /* diffuse light material */
         const material_t mat_diff_light = {.type     = MAT_DIFFUSE_LIGHT,
                                            .emission = (vec3_t){15.0f, 15.0f,
