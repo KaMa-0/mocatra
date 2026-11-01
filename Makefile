@@ -3,6 +3,10 @@ INC := ./include/
 DST_DIR := ./bin
 CONF := config.h
 
+BASELINE := test/baseline_original.ppm
+OUT := out/mocatra_image.ppm
+
+
 # 1. Detect Operating System
 ifeq ($(OS),Windows_NT)
     OS_NAME := win64
@@ -52,14 +56,15 @@ format:
 	clang-format -i src/*.c include/*.h
 	ctags -R --languages=C,C++ --extras=+q --fields=+iaS -f tags .
 
-BASELINE = test/baseline_original.ppm
-OUT = mocatra_image.ppm
-
 regression:
 	MOCATRA_SEED=43 $(DST)
 	python3 tools/compare_ppm.py $(BASELINE) $(OUT)
 
 test: regression
 
+baseline-update:
+	MOCATRA_SEED=43 $(DST)
+	cp $(OUT) $(BASELINE)
+
 clean:
-	rm -f test/* $(DST_DIR)/*
+	rm -f $(DST_DIR)/*

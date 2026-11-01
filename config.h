@@ -7,7 +7,7 @@
 
 
 /* relative path to output  */
-char* output_image_path   = "mocatra_image.ppm";
+char* output_image_path   = "out/mocatra_image.ppm";
 
 /* must be float value      */
 float image_aspect_ratio  = 1.0f / 1.0f;
