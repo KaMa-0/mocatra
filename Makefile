@@ -1,11 +1,12 @@
-SRC := $(wildcard ./src/*)
-INC := ./include/
-DST_DIR := ./bin
-CONF := config.h
+# Directories & Files
+SRC_DIR   := src
+INC_DIR   := include
+DST_DIR   := build
+OUT_DIR	  := out
+BASELINE  := test/baseline_original.ppm
+OUT       := $(OUT_DIR)/mocatra_image.ppm
 
-BASELINE := test/baseline_original.ppm
-OUT := out/mocatra_image.ppm
-
+SRCS      := $(wildcard $(SRC_DIR)/*.c)
 
 # 1. Detect Operating System
 ifeq ($(OS),Windows_NT)
@@ -24,47 +25,54 @@ endif
 
 DST := $(DST_DIR)/mocatra_$(OS_NAME)$(EXE_EXT)
 
-# 2. Base Compiler Flags
-CFLAGS := -I$(INC) -I. -std=c99 -Wunused-function
-LIBS := -lm
+# 2. Base Compiler & Flags
+CC      := gcc
+CFLAGS  := -I$(INC_DIR) -I. -std=c99 -Wunused-function
+LIBS    := -lm
 
-# 3. Target-Specific Flags 
-all: CFLAGS += -O3 -march=native -DNDEBUG
-all: LDFLAGS += -s
-
-# 4. Debug Flags
-debug: CFLAGS += -O0 -g -fsanitize=address
-debug: LDFLAGS += -fsanitize=address
-
-.PHONY: default all debug run clean
+.PHONY: default all debug run clean format test regression baseline-update
 
 default: all run
 
-all:
-	@mkdir -p $(DST_DIR)
-	gcc $(SRC) -o $(DST) $(CFLAGS) $(LDFLAGS) $(LIBS)
+# 3. Build Configurations
+all: CFLAGS += -O3 -march=native -DNDEBUG
+all: LDFLAGS += -s
+all: $(DST)
 
-debug:
-	@mkdir -p $(DST_DIR)
-	gcc $(SRC) -o $(DST) $(CFLAGS) $(LDFLAGS) $(LIBS)
+debug: CFLAGS += -O0 -g -fsanitize=address
+debug: LDFLAGS += -fsanitize=address
+debug: $(DST)
 	gdb $(DST)
 
+# Special build variant for regression testing with the seed/macro
+regress-build: CFLAGS += -O3 -march=native -DMOCATRA_REGRESSION
+regress-build: $(DST)
+
+# Core compilation recipe (shared across targets)
+$(DST): $(SRCS)
+	@mkdir -p $(DST_DIR)
+	$(CC) $(SRCS) -o $@ $(CFLAGS) $(LDFLAGS) $(LIBS)
+
+# 4. Utilities & Testing
 run:
+	@mkdir -p $(DST_DIR) $(OUT_DIR)
 	@$(DST)
 
 format:
-	clang-format -i src/*.c include/*.h
+	clang-format -i $(SRC_DIR)/*.c $(INC_DIR)/*.h
 	ctags -R --languages=C,C++ --extras=+q --fields=+iaS -f tags .
 
-regression:
+regression: all
+	@mkdir -p $(OUT_DIR)
 	MOCATRA_SEED=43 $(DST)
 	python3 tools/compare_ppm.py $(BASELINE) $(OUT)
 
 test: regression
 
-baseline-update:
+baseline-update: regress-build
+	@mkdir -p $(OUT_DIR)
 	MOCATRA_SEED=43 $(DST)
 	cp $(OUT) $(BASELINE)
 
 clean:
-	rm -f $(DST_DIR)/*
+	rm -rf $(DST_DIR)/* $(OUT_DIR)/* tags

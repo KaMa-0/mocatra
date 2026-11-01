@@ -51,11 +51,19 @@ main(void)
         /* configuration */
 
         /* values taken over from the central config file */
+#ifndef MOCATRA_REGRESSION
         img_path       = output_image_path;
         aspect_ratio   = image_aspect_ratio;
         img_width      = image_width;
         samples_per_px = samples_per_pixel;
         max_depth      = maximum_ray_depth;
+#else
+        img_path       = REGRESSION_PATH;
+        aspect_ratio   = REGRESSION_RATIO;
+        img_width      = REGRESSION_WIDTH;
+        samples_per_px = REGRESSION_SPP;
+        max_depth      = REGRESSION_DEPTH;
+#endif
 
         /* ============= */
 

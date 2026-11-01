@@ -1,10 +1,15 @@
 /*
+ * /file        config.h
  *
- * MOCATRA configuration file
- * 
+ * /brief       MOCATRA configuration file
  *
  * */
 
+#define REGRESSION_WIDTH        128
+#define REGRESSION_RATIO        1.0f/1.0f
+#define REGRESSION_SPP          64
+#define REGRESSION_DEPTH        5
+#define REGRESSION_PATH         "out/regression/regression.ppm"
 
 /* relative path to output  */
 char* output_image_path   = "out/mocatra_image.ppm";
