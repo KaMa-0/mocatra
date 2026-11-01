@@ -1,26 +1,14 @@
 /**
- *
- *  \file   ray.h
- *  \brief  Utilities for a Ray.
- *
- */
-
-/*
- *  Author:  KaMa (https://github.com/KaMa-0/
- *                 https://gitlab.com/KaMa-0/)
- *
+ *  \file       ray.h
+ *  \brief      Utilities for a Ray.
  */
 
 #ifndef _RAY_H
 #define _RAY_H
 
-#include "image.h"
-#include "material.h"
-#include "vec3.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+#include "core/vec3.h"
+#include "io/image.h"
+#include "material/material.h"
 
 typedef struct hittable hittable_t;
 
@@ -38,9 +26,5 @@ float hit_sphere(const vec3_t center, float radius, const ray_t r);
 vec3_t material_emitted(material_t mat);
 float  material_scattering_pdf(material_t mat, vec3_t normal,
                                vec3_t scattered_dir);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* _RAY_H */

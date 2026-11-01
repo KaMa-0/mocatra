@@ -2,7 +2,7 @@
  * \file        quad.c
  * */
 
-#include "quad.h"
+#include "geometry/quad.h"
 
 static uint8_t
 quad_hit(const hittable_t* self, const ray_t r, float t_min, float t_max,

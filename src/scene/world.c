@@ -2,10 +2,10 @@
  * \file        world.c
  */
 
-#include "world.h"
+#include "scene/world.h"
 
-#include "box.h"
-#include "quad.h"
+#include "geometry/box.h"
+#include "geometry/quad.h"
 
 hittable_list_t*
 create_world(size_t max_obj)

@@ -1,14 +1,12 @@
 /**
- *
  * \file        camera.h
  * \brief       Camera and viewport creation and configuration utility.
- *
  */
 
 #ifndef _CAMERA_H
 #define _CAMERA_H
 
-#include "vec3.h"
+#include "core/vec3.h"
 
 typedef struct camera {
         vec3_t center;

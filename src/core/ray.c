@@ -1,9 +1,8 @@
-#include <math.h>
-
 #include "mocatra.h"
 
-#include "hittable.h"
-#include "ray.h"
+#include "geometry/hittable.h"
+
+#include <math.h>
 
 vec3_t
 ray_at(const ray_t r, float t)

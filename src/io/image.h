@@ -1,8 +1,6 @@
 /**
- *
  *  \file   image.h
  *  \brief  Utility for writing PPM Images.
- *
  */
 
 #ifndef _IMAGE_H

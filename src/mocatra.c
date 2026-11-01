@@ -1,19 +1,21 @@
+#include "mocatra.h"
+
+#include "config.h"
+
+#include "core/ray.h"
+#include "core/vec3.h"
+
+#include "scene/camera.h"
+#include "scene/world.h"
+
+#include "io/image.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-#include "config.h"
-#include "mocatra.h"
-
-#include "image.h"
-#include "ray.h"
-#include "vec3.h"
-
-#include "camera.h"
-#include "world.h"
-
 int
-main(void)
+mocatra_main(void)
 {
         image_t* img; /* image containing image buffer */
         pixel_t  px;  /* pixel containing r,g,b values */
@@ -40,8 +42,6 @@ main(void)
         int   samples_per_px;      /* number of samples per pixel      */
 
         int max_depth;
-
-        printf("MOCATRA - Monte Carlo Tracer!\n");
 
         /* ============= */
         /* configuration */
@@ -189,4 +189,14 @@ main(void)
         /* ------- */
 
         return 0;
+}
+
+mocatra_error_t
+mocatra_init(void)
+{
+        printf("MOCATRA - Monte Carlo Tracer!\n");
+
+        mocatra_main();
+
+        return MOCATRA_OK;
 }

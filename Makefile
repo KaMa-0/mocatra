@@ -1,12 +1,12 @@
 # Directories & Files
 SRC_DIR   := src
-INC_DIR   := include
+INC_DIR   := src 
 DST_DIR   := build
 OUT_DIR	  := out
 BASELINE  := test/baseline_original.ppm
 OUT       := $(OUT_DIR)/mocatra_image.ppm
 
-SRCS      := $(wildcard $(SRC_DIR)/*.c)
+SRCS      := $(shell find $(SRC_DIR) -type f -name '*.c')
 
 # 1. Detect Operating System
 ifeq ($(OS),Windows_NT)
@@ -59,7 +59,7 @@ run:
 	@$(DST)
 
 format:
-	clang-format -i $(SRC_DIR)/*.c $(INC_DIR)/*.h
+	find $(SRC_DIR) -type f \( -name '*.c' -o -name '*.h' \) -exec clang-format -i {} +
 	ctags -R --languages=C,C++ --extras=+q --fields=+iaS -f tags .
 
 regression: all

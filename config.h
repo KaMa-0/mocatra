@@ -1,8 +1,6 @@
 /*
  * /file        config.h
- *
  * /brief       MOCATRA configuration file
- *
  * */
 
 #define REGRESSION_WIDTH        128

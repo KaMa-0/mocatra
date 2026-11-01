@@ -1,8 +1,6 @@
 /**
- *
- *  \file   hittable_list.h
- *  \brief  List of hittable objects.
- *
+ *  \file       hittable_list.h
+ *  \brief      List of hittable objects.
  */
 
 #ifndef _HITTABLE_LIST_H

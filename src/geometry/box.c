@@ -2,11 +2,11 @@
  * \file        box.c
  * */
 
-#include "box.h"
+#include "geometry/box.h"
 
-#include "hittable_list.h"
+#include "geometry/hittable_list.h"
+#include "geometry/quad.h"
 #include "mocatra.h"
-#include "quad.h"
 
 void
 hittable_list_add_box(hittable_list_t* list, vec3_t p0, vec3_t p1,

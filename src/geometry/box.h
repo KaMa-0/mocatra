@@ -6,8 +6,8 @@
 #ifndef _BOX_H
 #define _BOX_H
 
-#include "hittable_list.h"
-#include "vec3.h"
+#include "core/vec3.h"
+#include "geometry/hittable_list.h"
 
 typedef struct quad_face_def {
         vec3_t origin;

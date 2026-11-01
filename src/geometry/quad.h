@@ -6,9 +6,9 @@
 #ifndef _QUAD_H
 #define _QUAD_H
 
-#include "hittable.h"
-#include "material.h"
-#include "vec3.h"
+#include "core/vec3.h"
+#include "geometry/hittable.h"
+#include "material/material.h"
 
 typedef struct quad {
         hittable_t base;

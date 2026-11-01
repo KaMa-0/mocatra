@@ -2,7 +2,7 @@
  * \file        camera.c
  */
 
-#include "camera.h"
+#include "scene/camera.h"
 
 #include "mocatra.h"
 

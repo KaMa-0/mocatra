@@ -1,18 +1,16 @@
 /**
- *
  *  \file       hittable.h
  *  \brief      Abstract hittable class for any object which a ray can "hit".
- *
  */
 
 #ifndef _HITTABLE_H
 #define _HITTABLE_H
 
-#include <stdint.h>
+#include "core/ray.h"
+#include "core/vec3.h"
+#include "material/material.h"
 
-#include "material.h"
-#include "ray.h"
-#include "vec3.h"
+#include <stdint.h>
 
 typedef struct hit_record {
         vec3_t     p;
@@ -34,8 +32,9 @@ struct hittable {
         const hittable_vtable_t* vtable;
 };
 
-static inline void hit_record_set_face_normal(hit_record_t* rec, const ray_t r,
-                                              const vec3_t outward_normal)
+static inline void
+hit_record_set_face_normal(hit_record_t* rec, const ray_t r,
+                           const vec3_t outward_normal)
 {
         rec->front_face = vec3_dot(r.dir, outward_normal) < 0;
         if (rec->front_face) {

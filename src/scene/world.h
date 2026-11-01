@@ -1,5 +1,4 @@
 /**
- *
  * \file        world.h
  * \brief       Utility for handling list of objects which interact with ray.
  *              This list of objects is defined as a "world" (or scene).
@@ -8,7 +7,7 @@
 #ifndef _WORLD_H
 #define _WORLD_H
 
-#include "hittable_list.h"
+#include "geometry/hittable_list.h"
 #include "mocatra_error.h"
 
 hittable_list_t* create_world(size_t max_obj);
