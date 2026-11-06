@@ -78,8 +78,7 @@ render(image_t* img, const camera_t* cam, const hittable_list_t* world,
                                                  vec3_scal(
                                                          cam->px_delta_v,
                                                          (float)y + offset.y)));
-                                ray = (ray_t)
-                                {
+                                ray = (ray_t){
                                         .orig = cam->center,
                                         .dir  = vec3_sub(sample_pixel_loc,
                                                          cam->center),

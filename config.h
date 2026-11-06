@@ -1,47 +1,73 @@
 /*
- * /file        config.h
- * /brief       MOCATRA configuration file
+ * \file        config.h
+ * \brief       MOCATRA configuration file
  * */
 
-#define REGRESSION_WIDTH        128
-#define REGRESSION_RATIO        1.0f/1.0f
-#define REGRESSION_SPP          64
-#define REGRESSION_DEPTH        5
-#define REGRESSION_PATH         "out/regression/regression.ppm"
+#ifndef _MOCATRA_CONFIG_H
+#define _MOCATRA_CONFIG_H
 
-/* relative path to output  */
-char* output_image_path   = "out/mocatra_image.ppm";
+/* =========================== USER CONFIGURATION =========================== */
+/* these configuration values can be adjusted to give desired render output */
 
-/* must be float value      */
-float image_aspect_ratio  = 1.0f / 1.0f;
+#define USER_OUTPUT_PATH        "out/mocatra_image.ppm"
+#define USER_IMAGE_WIDTH        128 
+#define USER_ASPECT_RATIO       (1.0f / 1.0f)   /* width / height       */
+#define USER_SPP                64              /* samples per pixel    */
+#define USER_RAY_DEPTH          5               /* maximum bounces      */
 
-/* width of output in pixel */
-int   image_width         = 128;
+/* ========================= END OF USER CONFIGURATION ====================== */
 
-/* number of samples/pixel  */
-int   samples_per_pixel   = 64;
+/* -------------------------------------------------------------------------- */
+/* Nothing below this line needs to be edited by the user.                    */
+/* Following configuration is for development and testing only.               */ 
+/* -------------------------------------------------------------------------- */
 
-/* iteration depth for ray  */
-int   maximum_ray_depth   = 5;
+typedef struct mocatra_conf_t {
+        char* img_path;
+        int img_width;
+        int img_ratio;
+        int spp;
+        int ray_depth;
+} mocatra_conf_t;
 
+#if defined(MOCATRA_REGRESSION) && defined(MOCATRA_TEST)
+#error "MOCATRA_REGRESSION and MOCATRA_TEST are mutually exclusive"
+#endif
 
-/* -----------------------------------------
- *  NOTE:
- *
- *      The output path to the final image must be a relative path with this 
- *      directory (project root) being the base. If a new folder is created 
- *      for storing the images, such as "images" it must be within this 
- *      project directory. There is no checking if the path exists or not.
- *
- *      Only image width is required, because the image height will be 
- *      consequently derived from it via the aspect ration.
- *
- *      The number of samples per pixel will and the maximum depth for the 
- *      ray recursion will both be crucial as to how much/little noise the 
- *      final render has and how true to life the light and shadows are.
- *      Playing around with these values can give interesting insights into 
- *      how the pathtracer works and how the different configurations affect 
- *      the final render.
- *
- * -----------------------------------------
- * */
+#if defined(MOCATRA_REGRESSION) || defined(MOCATRA_TEST)
+
+#define CONF_IMAGE_WIDTH  128
+#define CONF_ASPECT_RATIO (1.0f / 1.0f)
+#define CONF_SPP          64
+#define CONF_RAY_DEPTH    5
+ 
+#ifdef MOCATRA_REGRESSION       /* build for regression-test baseline         */
+#define CONF_OUTPUT_PATH "out/regression/baseline.ppm"
+#else                           /* build for regression-test run (compare)    */
+#define CONF_OUTPUT_PATH "out/regression/test.ppm"
+#endif
+ 
+#else                           /* normal build: take user configuration      */
+ 
+#define CONF_OUTPUT_PATH  USER_OUTPUT_PATH
+#define CONF_IMAGE_WIDTH  USER_IMAGE_WIDTH
+#define CONF_ASPECT_RATIO USER_ASPECT_RATIO
+#define CONF_SPP          USER_SPP
+#define CONF_RAY_DEPTH    USER_RAY_DEPTH
+ 
+#endif
+ 
+static inline mocatra_conf_t
+load_config(void)
+{
+        return (mocatra_conf_t){
+                .img_path  = CONF_OUTPUT_PATH,
+                .img_width = CONF_IMAGE_WIDTH,
+                .img_ratio = CONF_ASPECT_RATIO,
+                .spp       = CONF_SPP,
+                .ray_depth = CONF_RAY_DEPTH,
+        };
+}
+ 
+#endif /* MOCATRA_CONFIG_H */
+

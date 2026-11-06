@@ -24,6 +24,7 @@ mocatra_main(void)
         hittable_list_t* world; /* world containing list of objects */
 
         render_settings_t settings;
+        mocatra_conf_t conf;
 
         camera_t cam;
 
@@ -32,26 +33,19 @@ mocatra_main(void)
         float aspect_ratio; /* aspect ratio of the final image render */
 
         int img_width, img_height; /* image width and height (min. 1) */
+        int samples_per_px, max_depth;
 
         /* ============= */
         /* configuration */
 
         /* values taken over from the central config file */
-#ifndef MOCATRA_REGRESSION
-        img_path       = output_image_path;
-        aspect_ratio   = image_aspect_ratio;
-        img_width      = image_width;
-        //samples_per_px = samples_per_pixel;
-        //max_depth      = maximum_ray_depth;
-#else
-        img_path       = REGRESSION_PATH;
-        aspect_ratio   = REGRESSION_RATIO;
-        img_width      = REGRESSION_WIDTH;
-        settings = (render_settings_t) {
-                samples_per_px = REGRESSION_SPP,
-                max_depth      = REGRESSION_DEPTH,
-        }
-#endif
+        conf = load_config();
+
+        img_path        = conf.img_path;
+        img_width       = conf.img_width;
+        aspect_ratio    = conf.img_ratio;
+        samples_per_px  = conf.spp;
+        max_depth       = conf.ray_depth;
 
         /* ============= */
 
@@ -99,8 +93,8 @@ mocatra_main(void)
         /* Render */
 
         settings = (render_settings_t){
-                .sample_per_px = 64,
-                .max_depth     = 5,
+                .sample_per_px = samples_per_px,
+                .max_depth     = max_depth,
         };
         render(img, &cam, world, &settings);
 
