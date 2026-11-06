@@ -12,7 +12,7 @@
 static const float INF = INFINITY;
 static const float PI  = 3.14159f;
 
-mocatra_error_t mocatra_init(void);
+int mocatra_main(void);
 
 static inline double
 degrees_to_radians(double degrees)

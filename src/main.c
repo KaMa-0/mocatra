@@ -3,6 +3,6 @@
 int
 main(void)
 {
-        mocatra_init();
+        mocatra_main();
         return 0;
 }

@@ -8,6 +8,8 @@
 #include "scene/camera.h"
 #include "scene/world.h"
 
+#include "render/renderer.h"
+
 #include "io/image.h"
 
 #include <stdio.h>
@@ -18,30 +20,18 @@ int
 mocatra_main(void)
 {
         image_t* img; /* image containing image buffer */
-        pixel_t  px;  /* pixel containing r,g,b values */
 
         hittable_list_t* world; /* world containing list of objects */
 
-        ray_t  ray;           /* ray                          */
-        vec3_t ray_direction; /* direction of ray in 3d space */
+        render_settings_t settings;
 
         camera_t cam;
-
-        vec3_t accumulated_color; /* contains sub pixel color accumulation */
-        vec3_t offset;            /* random offset within sample square    */
-        vec3_t sample_pixel_loc;  /* sample coordinate on viewport grid    */
-        vec3_t sample_col;        /* color of single sample                */
 
         char* img_path; /* path to destination for final image render */
 
         float aspect_ratio; /* aspect ratio of the final image render */
 
         int img_width, img_height; /* image width and height (min. 1) */
-
-        float pixel_samples_scale; /* scale factor maps sum to 0.0-1.0 */
-        int   samples_per_px;      /* number of samples per pixel      */
-
-        int max_depth;
 
         /* ============= */
         /* configuration */
@@ -51,14 +41,16 @@ mocatra_main(void)
         img_path       = output_image_path;
         aspect_ratio   = image_aspect_ratio;
         img_width      = image_width;
-        samples_per_px = samples_per_pixel;
-        max_depth      = maximum_ray_depth;
+        //samples_per_px = samples_per_pixel;
+        //max_depth      = maximum_ray_depth;
 #else
         img_path       = REGRESSION_PATH;
         aspect_ratio   = REGRESSION_RATIO;
         img_width      = REGRESSION_WIDTH;
-        samples_per_px = REGRESSION_SPP;
-        max_depth      = REGRESSION_DEPTH;
+        settings = (render_settings_t) {
+                samples_per_px = REGRESSION_SPP,
+                max_depth      = REGRESSION_DEPTH,
+        }
 #endif
 
         /* ============= */
@@ -106,69 +98,13 @@ mocatra_main(void)
 
         /* Render */
 
-        pixel_samples_scale = 1.0f / (float)samples_per_px;
+        settings = (render_settings_t){
+                .sample_per_px = 64,
+                .max_depth     = 5,
+        };
+        render(img, &cam, world, &settings);
 
-        for (uint32_t y = 0; y < img->height; y++) {
-                for (uint32_t x = 0; x < img->width; x++) {
-                        accumulated_color = (vec3_t){
-                                .x = 0.0f,
-                                .y = 0.0f,
-                                .z = 0.0f,
-                        };
-
-                        for (int s = 0; s < samples_per_px; s++) {
-                                offset           = sample_square();
-                                sample_pixel_loc = vec3_add(
-                                        cam.px_origin,
-                                        vec3_add(vec3_scal(cam.px_delta_u,
-                                                           (float)x + offset.x),
-                                                 vec3_scal(
-                                                         cam.px_delta_v,
-                                                         (float)y + offset.y)));
-                                ray_direction = vec3_sub(sample_pixel_loc,
-                                                         cam.center);
-                                ray           = (ray_t){
-                                        .orig = cam.center,
-                                        .dir  = ray_direction,
-                                };
-
-                                sample_col = ray_color(ray, max_depth,
-                                                       (hittable_t*)world);
-                                accumulated_color = vec3_add(accumulated_color,
-                                                             sample_col);
-                        }
-
-                        accumulated_color = vec3_scal(accumulated_color,
-                                                      pixel_samples_scale);
-
-                        px = (pixel_t){
-                                .r = linear_to_gamma(accumulated_color.x),
-                                .g = linear_to_gamma(accumulated_color.y),
-                                .b = linear_to_gamma(accumulated_color.z),
-                        };
-
-                        if (image_px_set(img, x, y, px) != MOCATRA_OK) {
-                                printf("[ERROR] Failed setting pixel value.\n");
-                                return MOCATRA_ERROR;
-                        }
-                }
-
-                /* progress indicator */
-                printf("\rRendering: ["); // Added \r back to fix line spam
-                for (int i = 0; i < 50; i++) {
-                        if (i < (int)(50 * ((float)(y + 1) / img->height))) {
-                                printf("=");
-                        } else if (i
-                                   == (int)(50
-                                            * ((float)(y + 1) / img->height))) {
-                                printf(">");
-                        } else {
-                                printf(" ");
-                        }
-                }
-                printf("] %3d%%", (int)(((float)(y + 1) / img->height) * 100));
-                fflush(stdout);
-        }
+        /* ------ */
 
         printf("\n\nRender Complete!\nSaving image ... \n");
 
@@ -177,8 +113,6 @@ mocatra_main(void)
                 image_destroy(img);
                 return 1;
         }
-
-        /* ------ */
 
         /* Cleanup */
 
@@ -189,14 +123,4 @@ mocatra_main(void)
         /* ------- */
 
         return 0;
-}
-
-mocatra_error_t
-mocatra_init(void)
-{
-        printf("MOCATRA - Monte Carlo Tracer!\n");
-
-        mocatra_main();
-
-        return MOCATRA_OK;
 }
