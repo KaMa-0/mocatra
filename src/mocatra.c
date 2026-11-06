@@ -35,6 +35,8 @@ mocatra_main(void)
         int img_width, img_height; /* image width and height (min. 1) */
         int samples_per_px, max_depth;
 
+        unsigned int seed;
+
         /* ============= */
         /* configuration */
 
@@ -46,14 +48,13 @@ mocatra_main(void)
         aspect_ratio    = conf.img_ratio;
         samples_per_px  = conf.spp;
         max_depth       = conf.ray_depth;
+        seed            = conf.seed;
 
         /* ============= */
 
         /* Random generator seeding */
 
-        const char* s = getenv("MOCATRA_SEED");
-        srand(s ? (unsigned int)strtoul(s, NULL, 10)
-                : (unsigned int)time(NULL));
+        srand(seed == 0u ? (unsigned int)time(NULL) : seed);
 
         /* ------------------------ */
 
