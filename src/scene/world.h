@@ -8,7 +8,7 @@
 #define _WORLD_H
 
 #include "geometry/hittable_list.h"
-#include "mocatra_error.h"
+#include "mocatra.h"
 
 hittable_list_t* create_world(size_t max_obj);
 void             destroy_world(hittable_list_t* world);

@@ -24,7 +24,7 @@ mocatra_main(void)
         hittable_list_t* world; /* world containing list of objects */
 
         render_settings_t settings;
-        mocatra_conf_t conf;
+        mocatra_conf_t    conf;
 
         camera_t cam;
 
@@ -43,12 +43,12 @@ mocatra_main(void)
         /* values taken over from the central config file */
         conf = load_config();
 
-        img_path        = conf.img_path;
-        img_width       = conf.img_width;
-        aspect_ratio    = conf.img_ratio;
-        samples_per_px  = conf.spp;
-        max_depth       = conf.ray_depth;
-        seed            = conf.seed;
+        img_path       = conf.img_path;
+        img_width      = conf.img_width;
+        aspect_ratio   = conf.img_ratio;
+        samples_per_px = conf.spp;
+        max_depth      = conf.ray_depth;
+        seed           = conf.seed;
 
         /* ============= */
 

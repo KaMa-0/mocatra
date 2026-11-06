@@ -8,7 +8,7 @@
 
 #include "hittable.h"
 
-#include "mocatra_error.h"
+#include "mocatra.h"
 
 typedef struct hittable_list {
         hittable_t   base;

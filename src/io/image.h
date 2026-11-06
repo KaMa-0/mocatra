@@ -6,7 +6,7 @@
 #ifndef _IMAGE_H
 #define _IMAGE_H
 
-#include "mocatra_error.h"
+#include "mocatra.h"
 
 #include <stddef.h>
 #include <stdint.h>

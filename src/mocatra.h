@@ -2,11 +2,22 @@
 #define _MOCATRA_H
 
 #include "core/vec3.h"
-#include "mocatra_error.h"
+#include "mocatra.h"
 
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+typedef enum {
+        MOCATRA_OK = 0,        /**< function/program exited properly */
+        MOCATRA_INVARG,        /**< invalid arguments given to function */
+        MOCATRA_INVIMG,        /**< invalid values in image structure */
+        MOCATRA_INVSETTINGS,   /**< invalid render settings */
+        MOCATRA_INIT_FAILED,   /**< mocatra init error */
+        MOCATRA_NOMEM,         /**< memory allocation failed without memory */
+        MOCATRA_ERROR_UNKNOWN, /**< unknown mocatra error */
+        MOCATRA_ERROR,         /**< generic mocatra error */
+} mocatra_error_t;
 
 /* global constants */
 static const float INF = INFINITY;

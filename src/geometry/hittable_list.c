@@ -4,7 +4,7 @@
 
 #include "hittable_list.h"
 
-#include "mocatra_error.h"
+#include "mocatra.h"
 
 static uint8_t
 hittable_list_hit(const hittable_t* self, const ray_t r, float t_min,
