@@ -2,7 +2,7 @@
  * \file        image.c
  */
 
-#include "image.h"
+#include "io/image.h"
 
 #include <stdbool.h>
 #include <stdint.h>
