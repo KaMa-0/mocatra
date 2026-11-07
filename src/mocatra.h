@@ -14,7 +14,8 @@ typedef enum {
         MOCATRA_INVIMG,        /**< invalid values in image structure */
         MOCATRA_INVSETTINGS,   /**< invalid render settings */
         MOCATRA_INIT_FAILED,   /**< mocatra init error */
-        MOCATRA_NOMEM,         /**< memory allocation failed without memory */
+        MOCATRA_NOMEM,         /**< memory allocation failed (out of memory) */
+        MOCATRA_FILE_ERROR,    /**< file i/o operation failed */
         MOCATRA_ERROR_UNKNOWN, /**< unknown mocatra error */
         MOCATRA_ERROR,         /**< generic mocatra error */
 } mocatra_error_t;
