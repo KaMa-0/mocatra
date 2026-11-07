@@ -26,7 +26,8 @@ mocatra_main(void)
         render_settings_t settings;
         mocatra_conf_t    conf;
 
-        camera_t cam;
+        camera_config_t cam_cfg;
+        camera_t        cam;
 
         /* ============= */
         /* configuration */
@@ -55,7 +56,8 @@ mocatra_main(void)
 
         /* Camera */
 
-        cam = camera_init(conf.img_width, conf.img_height);
+        cam_cfg = camera_config_default();
+        cam     = camera_init(&cam_cfg, conf.img_width, conf.img_height);
 
         /* ------ */
 
