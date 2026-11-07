@@ -26,7 +26,8 @@
 typedef struct mocatra_conf_t {
         char*        img_path;
         int          img_width;
-        int          img_ratio;
+        float        img_ratio;
+        int          img_height;
         int          spp;
         int          ray_depth;
         unsigned int seed;
@@ -61,18 +62,48 @@ typedef struct mocatra_conf_t {
  
 #endif
  
+#define CONF_MAX_DIMENSIONS 2073600
+
+static inline int
+conf_image_height(int width, float ratio)
+{
+        float h;
+        
+        if (width < 1 || width > CONF_MAX_DIMENSIONS || !(ratio > 0.0f)) {
+                return 0;
+        }
+
+        h = (float)width / (float)ratio;
+        if (h > CONF_MAX_DIMENSIONS) {
+                return 0;
+        }
+
+        return (h < 1.0) ? 1 : (int)h;
+}
+
 static inline mocatra_conf_t
 load_config(void)
 {
         return (mocatra_conf_t){
-                .img_path  = CONF_OUTPUT_PATH,
-                .img_width = CONF_IMAGE_WIDTH,
-                .img_ratio = CONF_ASPECT_RATIO,
-                .spp       = CONF_SPP,
-                .ray_depth = CONF_RAY_DEPTH,
-                .seed      = CONF_SEED,
+                .img_path   = CONF_OUTPUT_PATH,
+                .img_ratio  = CONF_ASPECT_RATIO,
+                .img_width  = CONF_IMAGE_WIDTH,
+                .img_height = conf_image_height(CONF_IMAGE_WIDTH, CONF_ASPECT_RATIO),
+                .spp        = CONF_SPP,
+                .ray_depth  = CONF_RAY_DEPTH,
+                .seed       = CONF_SEED,
         };
 }
- 
+
+static inline mocatra_error_t
+config_validate(const mocatra_conf_t* c)
+{
+        if (c == NULL || c->img_path == NULL || c->img_height < 1 || c->spp < 1 || c->ray_depth < 1) {
+                return MOCATRA_INVCONFIG;
+        }
+
+        return MOCATRA_OK;
+}
+
 #endif /* MOCATRA_CONFIG_H */
 

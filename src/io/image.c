@@ -128,7 +128,7 @@ image_write_ppm(const image_t* img, const char* path)
 
         for (size_t i = 0; i < count; i++) {
                 uint8_t* out;
-                out = &bytes[3 * i];
+                out    = &bytes[3 * i];
                 out[0] = channel_to_byte(img->buffer[i].r);
                 out[1] = channel_to_byte(img->buffer[i].g);
                 out[2] = channel_to_byte(img->buffer[i].b);

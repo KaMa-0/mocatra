@@ -28,42 +28,24 @@ mocatra_main(void)
 
         camera_t cam;
 
-        char* img_path; /* path to destination for final image render */
-
-        float aspect_ratio; /* aspect ratio of the final image render */
-
-        int img_width, img_height; /* image width and height (min. 1) */
-        int samples_per_px, max_depth;
-
-        unsigned int seed;
-
         /* ============= */
         /* configuration */
 
         /* values taken over from the central config file */
         conf = load_config();
-
-        img_path       = conf.img_path;
-        img_width      = conf.img_width;
-        aspect_ratio   = conf.img_ratio;
-        samples_per_px = conf.spp;
-        max_depth      = conf.ray_depth;
-        seed           = conf.seed;
+        config_validate(&conf);
 
         /* ============= */
 
         /* Random generator seeding */
 
-        srand(seed == 0u ? (unsigned int)time(NULL) : seed);
+        srand(conf.seed == 0u ? (unsigned int)time(NULL) : conf.seed);
 
         /* ------------------------ */
 
         /* Image */
 
-        img_height = (int)(img_width / aspect_ratio);
-        img_height = (img_height < 1) ? 1 : img_height;
-
-        img = image_create(img_width, img_height);
+        img = image_create(conf.img_width, conf.img_height);
         if (img == NULL) {
                 printf("[ERROR] Failed to create image.\n");
                 return MOCATRA_ERROR;
@@ -73,7 +55,7 @@ mocatra_main(void)
 
         /* Camera */
 
-        cam = camera_init(img_width, img_height);
+        cam = camera_init(conf.img_width, conf.img_height);
 
         /* ------ */
 
@@ -94,8 +76,8 @@ mocatra_main(void)
         /* Render */
 
         settings = (render_settings_t){
-                .sample_per_px = samples_per_px,
-                .max_depth     = max_depth,
+                .sample_per_px = conf.spp,
+                .max_depth     = conf.ray_depth,
         };
         render(img, &cam, world, &settings);
 
@@ -103,7 +85,7 @@ mocatra_main(void)
 
         printf("\n\nRender Complete!\nSaving image ... \n");
 
-        if (image_write_ppm(img, img_path) != 0) {
+        if (image_write_ppm(img, conf.img_path) != 0) {
                 fprintf(stderr, "Failed to write image\n");
                 image_destroy(img);
                 return 1;

@@ -13,6 +13,7 @@ typedef enum {
         MOCATRA_INVARG,        /**< invalid arguments given to function */
         MOCATRA_INVIMG,        /**< invalid values in image structure */
         MOCATRA_INVSETTINGS,   /**< invalid render settings */
+        MOCATRA_INVCONFIG,     /**< invalid mocatra user configuration */
         MOCATRA_INIT_FAILED,   /**< mocatra init error */
         MOCATRA_NOMEM,         /**< memory allocation failed (out of memory) */
         MOCATRA_FILE_ERROR,    /**< file i/o operation failed */
