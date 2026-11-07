@@ -32,6 +32,17 @@ image_bufsize(const image_t* img)
         return image_size(img) * sizeof(pixel_t);
 }
 
+static inline uint8_t
+channel_to_byte(float c)
+{
+        if (c < 0.0f) {
+                c = 0.0f;
+        } else if (c > 1.0f) {
+                c = 1.0f;
+        }
+        return (uint8_t)(255.999f * c);
+}
+
 image_t*
 image_create(uint32_t width, uint32_t height)
 {
@@ -117,10 +128,10 @@ image_write_ppm(const image_t* img, const char* path)
 
         for (size_t i = 0; i < count; i++) {
                 uint8_t* out;
-                out    = &bytes[3 * i];
-                out[0] = (unsigned char)(255.999f * img->buffer[i].r);
-                out[1] = (unsigned char)(255.999f * img->buffer[i].g);
-                out[2] = (unsigned char)(255.999f * img->buffer[i].b);
+                out = &bytes[3 * i];
+                out[0] = channel_to_byte(img->buffer[i].r);
+                out[1] = channel_to_byte(img->buffer[i].g);
+                out[2] = channel_to_byte(img->buffer[i].b);
         }
 
         fp = fopen(path, "wb");
