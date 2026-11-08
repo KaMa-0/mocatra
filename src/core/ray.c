@@ -1,6 +1,11 @@
-#include "mocatra.h"
+/**
+ * \file        ray.c
+ */
+
+#include "core/ray.h"
 
 #include "geometry/hittable.h"
+#include "mocatra.h"
 
 #include <math.h>
 
@@ -44,7 +49,7 @@ ray_color(ray_t r, int depth, const hittable_t* world)
                 return rec.mat.emission;
         }
 
-        emitted = material_emitted(rec.mat);
+        emitted = rec.mat.emission;
 
         if (rec.mat.type == MAT_METAL) {
                 /* metal material */
@@ -89,30 +94,4 @@ ray_color(ray_t r, int depth, const hittable_t* world)
                 return vec3_add(emitted,
                                 vec3_cmpnt_mult(attenuation, incoming_col));
         }
-}
-
-vec3_t
-material_emitted(material_t mat)
-{
-        if (mat.type == MAT_DIFFUSE_LIGHT) {
-                return mat.emission;
-        }
-        return (vec3_t){
-                .x = 0.0f,
-                .y = 0.0f,
-                .z = 0.0f,
-        };
-}
-
-float
-material_scattering_pdf(material_t mat, vec3_t normal, vec3_t scattered_dir)
-{
-        float cos_theta;
-
-        if (mat.type == MAT_LAMBERTIAN) {
-                cos_theta = vec3_dot(vec3_unit(scattered_dir), normal);
-                return (cos_theta < 0.0f) ? 0.0f : cos_theta / (float)PI;
-        }
-
-        return 1.0f;
 }

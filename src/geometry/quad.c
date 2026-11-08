@@ -4,6 +4,10 @@
 
 #include "geometry/quad.h"
 
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 static uint8_t
 quad_hit(const hittable_t* self, const ray_t r, float t_min, float t_max,
          hit_record_t* rec)

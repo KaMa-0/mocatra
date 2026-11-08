@@ -9,6 +9,7 @@
 #include "core/vec3.h"
 #include "geometry/hittable.h"
 #include "material/material.h"
+#include "mocatra.h"
 
 typedef struct quad {
         hittable_t base;
