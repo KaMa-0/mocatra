@@ -15,8 +15,8 @@ typedef struct quad_face_def {
         vec3_t v;
 } quad_face_def_t;
 
-void hittable_list_add_box(hittable_list_t* list, vec3_t p0, vec3_t p1,
-                           float angle_degrees, vec3_t transformation,
-                           material_t mat);
+mocatra_error_t hittable_list_add_box(hittable_list_t* list, vec3_t p0,
+                                      vec3_t p1, float angle_degrees,
+                                      vec3_t transformation, material_t mat);
 
 #endif /* _BOX_H */

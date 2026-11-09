@@ -8,7 +8,7 @@
 #include "geometry/quad.h"
 #include "mocatra.h"
 
-void
+mocatra_error_t
 hittable_list_add_box(hittable_list_t* list, vec3_t p0, vec3_t p1,
                       float angle_degrees, vec3_t translation, material_t mat)
 {
@@ -18,7 +18,7 @@ hittable_list_add_box(hittable_list_t* list, vec3_t p0, vec3_t p1,
         float           radians, sin_theta, cos_theta;
 
         if (list == NULL) {
-                return;
+                return MOCATRA_INVARG;
         }
 
         min_pt = (vec3_t){
@@ -98,4 +98,6 @@ hittable_list_add_box(hittable_list_t* list, vec3_t p0, vec3_t p1,
                         hittable_list_add(list, (hittable_t*)q);
                 }
         }
+
+        return MOCATRA_OK;
 }

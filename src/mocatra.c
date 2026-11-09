@@ -63,7 +63,7 @@ mocatra_main(void)
 
         /* World */
 
-        world = create_world(18);
+        world = world_create(WORLD_CORNELL_OBJECT_COUNT);
         if (world == NULL) {
                 printf("[ERROR] Failed to create world scene.\n");
                 return MOCATRA_ERROR;
@@ -97,7 +97,7 @@ mocatra_main(void)
 
         image_destroy(img);
 
-        destroy_world(world);
+        world_destroy(world);
 
         /* ------- */
 
