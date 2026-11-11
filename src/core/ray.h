@@ -6,6 +6,7 @@
 #ifndef _RAY_H
 #define _RAY_H
 
+#include "core/ray.h"
 #include "core/vec3.h"
 
 typedef struct hittable hittable_t;

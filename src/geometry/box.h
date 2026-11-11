@@ -8,6 +8,7 @@
 
 #include "core/vec3.h"
 #include "geometry/hittable_list.h"
+#include "mocatra.h"
 
 typedef struct quad_face_def {
         vec3_t origin;

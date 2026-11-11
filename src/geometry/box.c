@@ -1,12 +1,10 @@
 /*
  * \file        box.c
- * */
+ **/
 
 #include "geometry/box.h"
 
-#include "geometry/hittable_list.h"
 #include "geometry/quad.h"
-#include "mocatra.h"
 
 mocatra_error_t
 hittable_list_add_box(hittable_list_t* list, vec3_t p0, vec3_t p1,
@@ -69,7 +67,7 @@ hittable_list_add_box(hittable_list_t* list, vec3_t p0, vec3_t p1,
         for (size_t idx = 0; idx < 6; ++idx) {
                 quad_face_def_t f = local_faces[idx];
                 vec3_t          w_q, w_u, w_v;
-                quad_t*         q;
+                mocatra_error_t q_err;
 
                 /* Y-Axis Rotation + Translation */
                 w_q = (vec3_t){
@@ -92,10 +90,9 @@ hittable_list_add_box(hittable_list_t* list, vec3_t p0, vec3_t p1,
                         .z = -sin_theta * f.v.x + cos_theta * f.v.z,
                 };
 
-                q = quad_create();
-                if (q != NULL) {
-                        quad_init(q, w_q, w_u, w_v, mat);
-                        hittable_list_add(list, (hittable_t*)q);
+                q_err = hittable_list_add_quad(list, w_q, w_u, w_v, mat);
+                if (q_err != MOCATRA_OK) {
+                        return q_err;
                 }
         }
 

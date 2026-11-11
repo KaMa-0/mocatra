@@ -2,8 +2,6 @@
  * \file        ray.c
  */
 
-#include "core/ray.h"
-
 #include "geometry/hittable.h"
 #include "material/material.h"
 #include "mocatra.h"

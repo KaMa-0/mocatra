@@ -15,28 +15,14 @@ typedef struct {
         mocatra_error_t  err;
 } builder_t;
 
-static void
+static mocatra_error_t
 add_quad(builder_t* b, vec3_t q, vec3_t u, vec3_t v, material_t mat)
 {
-        quad_t* quad;
-
-        if (b->err != MOCATRA_OK) {
-                return;
-        }
-
-        quad = quad_create();
-        if (quad == NULL) {
-                b->err = MOCATRA_NOMEM;
-                return;
-        }
-
-        b->err = quad_init(quad, q, u, v, mat);
         if (b->err == MOCATRA_OK) {
-                b->err = hittable_list_add(b->list, (hittable_t*)quad);
+                b->err = hittable_list_add_quad(b->list, q, u, v, mat);
         }
-        if (b->err != MOCATRA_OK) {
-                free(quad);
-        }
+
+        return b->err;
 }
 
 /*
