@@ -24,7 +24,9 @@ mocatra_main(void)
         hittable_list_t* world; /* world containing list of objects */
 
         render_settings_t settings;
-        mocatra_conf_t    conf;
+        mocatra_error_t   render_err;
+
+        mocatra_conf_t conf;
 
         camera_config_t cam_cfg;
         camera_t        cam;
@@ -34,7 +36,10 @@ mocatra_main(void)
 
         /* values taken over from the central config file */
         conf = load_config();
-        config_validate(&conf);
+        if (config_valid(&conf) == false) {
+                printf("[ERROR] Invalid configuration values.\n");
+                return MOCATRA_INVCONFIG;
+        }
 
         /* ============= */
 
@@ -81,7 +86,11 @@ mocatra_main(void)
                 .sample_per_px = conf.spp,
                 .max_depth     = conf.ray_depth,
         };
-        render(img, &cam, world, &settings);
+        render_err = render(img, &cam, world, &settings);
+        if (render_err != MOCATRA_OK) {
+                printf("[ERROR] Failed to render image.\n");
+                return MOCATRA_ERROR;
+        }
 
         /* ------ */
 

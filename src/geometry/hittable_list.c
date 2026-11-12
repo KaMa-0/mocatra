@@ -69,9 +69,14 @@ mocatra_error_t
 hittable_list_add(hittable_list_t* list, hittable_t* object)
 {
         if (list->size == list->capacity) {
+                hittable_t** new_objects;
                 list->capacity *= 2;
-                list->objects = realloc(list->objects,
-                                        sizeof(hittable_t*) * list->capacity);
+                new_objects = realloc(list->objects,
+                                      sizeof(hittable_t*) * list->capacity);
+                if (new_objects == NULL) {
+                        return MOCATRA_NOMEM;
+                }
+                list->objects = new_objects;
         }
         list->objects[list->size++] = object;
 
