@@ -7,6 +7,7 @@
 #define _MATERIAL_H
 
 #include "core/vec3.h"
+#include "sampler/sampler.h"
 
 #include <stdbool.h>
 
@@ -27,7 +28,8 @@ material_t material_metal(vec3_t albedo);
 material_t material_light(vec3_t emission);
 
 bool material_scatter(material_t mat, vec3_t in_dir, vec3_t normal,
-                      vec3_t* out_dir, vec3_t* attenuation);
+                      vec3_t* out_dir, vec3_t* attenuation,
+                      const sampler_t* sampler);
 
 float material_scattering_pdf(material_t mat, vec3_t normal,
                               vec3_t scatter_dir);

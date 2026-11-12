@@ -34,14 +34,22 @@ render_print_progress(uint32_t rows_done, uint32_t rows_total)
 static bool
 render_settings_valid(const render_settings_t* settings)
 {
-        return (settings->sample_per_px > 0 && settings->max_depth > 0);
+        return settings != NULL && settings->sample_per_px > 0
+               && settings->max_depth > 0
+               && (settings->sampler == NULL
+                   || (settings->sampler->sample_pixel_offset != NULL
+                       && settings->sampler->sample_unit_vector != NULL))
+               && (settings->integrator == NULL
+                   || settings->integrator->integrate != NULL);
 }
 
 mocatra_error_t
 render(image_t* img, const camera_t* cam, const hittable_list_t* world,
        const render_settings_t* settings)
 {
-        float pixel_samples_scale;
+        float               pixel_samples_scale;
+        const sampler_t*    sampler;
+        const integrator_t* integrator;
 
         if (img == NULL || cam == NULL || world == NULL) {
                 return MOCATRA_INVARG;
@@ -51,6 +59,10 @@ render(image_t* img, const camera_t* cam, const hittable_list_t* world,
                 return MOCATRA_INVSETTINGS;
         }
 
+        sampler    = settings->sampler == NULL ? sampler_default()
+                                               : settings->sampler;
+        integrator = settings->integrator == NULL ? integrator_path_tracing()
+                                                  : settings->integrator;
         pixel_samples_scale = 1.0f / (float)settings->sample_per_px;
 
         for (uint32_t y = 0; y < img->height; y++) {
@@ -70,7 +82,7 @@ render(image_t* img, const camera_t* cam, const hittable_list_t* world,
                                 vec3_t sample_pixel_loc;
                                 ray_t  ray;
 
-                                offset           = sample_square();
+                                offset = sampler_sample_pixel_offset(sampler);
                                 sample_pixel_loc = vec3_add(
                                         cam->px_origin,
                                         vec3_add(vec3_scal(cam->px_delta_u,
@@ -84,8 +96,9 @@ render(image_t* img, const camera_t* cam, const hittable_list_t* world,
                                                          cam->center),
                                 };
 
-                                sample_col = ray_color(ray, settings->max_depth,
-                                                       (hittable_t*)world);
+                                sample_col = integrator->integrate(
+                                        ray, settings->max_depth,
+                                        (const hittable_t*)world, sampler);
                                 accumulated_color = vec3_add(accumulated_color,
                                                              sample_col);
                         }

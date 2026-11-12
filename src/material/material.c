@@ -36,7 +36,7 @@ material_light(vec3_t emission)
 
 bool
 material_scatter(material_t mat, vec3_t in_dir, vec3_t normal, vec3_t* out_dir,
-                 vec3_t* attenuation)
+                 vec3_t* attenuation, const sampler_t* sampler)
 {
         vec3_t dir;
 
@@ -48,7 +48,8 @@ material_scatter(material_t mat, vec3_t in_dir, vec3_t normal, vec3_t* out_dir,
                         }
                         break;
                 case MAT_LAMBERTIAN:
-                        dir = vec3_add(normal, random_unit_vector());
+                        dir = vec3_add(normal,
+                                       sampler_sample_unit_vector(sampler));
                         if (vec3_len_squared(dir) < NEAR_ZERO_SQ) {
                                 dir = normal;
                         }
