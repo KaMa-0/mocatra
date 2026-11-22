@@ -1,49 +1,110 @@
 /*
- * /file        config.h
- *
- * /brief       MOCATRA configuration file
- *
+ * \file        config.h
+ * \brief       MOCATRA configuration file
  * */
 
-#define REGRESSION_WIDTH        128
-#define REGRESSION_RATIO        1.0f/1.0f
-#define REGRESSION_SPP          64
-#define REGRESSION_DEPTH        5
-#define REGRESSION_PATH         "out/regression/regression.ppm"
+#ifndef _MOCATRA_CONFIG_H
+#define _MOCATRA_CONFIG_H
 
-/* relative path to output  */
-char* output_image_path   = "out/mocatra_image.ppm";
+#include <stdbool.h>
+#include <stddef.h>
 
-/* must be float value      */
-float image_aspect_ratio  = 1.0f / 1.0f;
+/* =========================== USER CONFIGURATION =========================== */
+/* these configuration values can be adjusted to give desired render output */
 
-/* width of output in pixel */
-int   image_width         = 128;
+#define USER_OUTPUT_PATH  "out/mocatra_image.ppm"
+#define USER_IMAGE_WIDTH  600
+#define USER_ASPECT_RATIO (1.0f / 1.0f) /* width / height       */
+#define USER_SPP          100           /* samples per pixel    */
+#define USER_RAY_DEPTH    50            /* maximum bounces      */
+#define USER_SEED         0u            /* seed from the clock  */
 
-/* number of samples/pixel  */
-int   samples_per_pixel   = 64;
+/* ========================= END OF USER CONFIGURATION ====================== */
 
-/* iteration depth for ray  */
-int   maximum_ray_depth   = 5;
+/* -------------------------------------------------------------------------- */
+/* Nothing below this line needs to be edited by the user.                    */
+/* Following configuration is for development and testing only.               */
+/* -------------------------------------------------------------------------- */
 
+typedef struct mocatra_conf_t {
+        char*        img_path;
+        int          img_width;
+        float        img_ratio;
+        int          img_height;
+        int          spp;
+        int          ray_depth;
+        unsigned int seed;
+} mocatra_conf_t;
 
-/* -----------------------------------------
- *  NOTE:
- *
- *      The output path to the final image must be a relative path with this 
- *      directory (project root) being the base. If a new folder is created 
- *      for storing the images, such as "images" it must be within this 
- *      project directory. There is no checking if the path exists or not.
- *
- *      Only image width is required, because the image height will be 
- *      consequently derived from it via the aspect ration.
- *
- *      The number of samples per pixel will and the maximum depth for the 
- *      ray recursion will both be crucial as to how much/little noise the 
- *      final render has and how true to life the light and shadows are.
- *      Playing around with these values can give interesting insights into 
- *      how the pathtracer works and how the different configurations affect 
- *      the final render.
- *
- * -----------------------------------------
- * */
+#if defined(MOCATRA_REGRESSION) && defined(MOCATRA_TEST)
+#error "MOCATRA_REGRESSION and MOCATRA_TEST are mutually exclusive"
+#endif
+
+#if defined(MOCATRA_REGRESSION) || defined(MOCATRA_TEST)
+
+#define CONF_IMAGE_WIDTH  128
+#define CONF_ASPECT_RATIO (1.0f / 1.0f)
+#define CONF_SPP          64
+#define CONF_RAY_DEPTH    5
+#define CONF_SEED         43u
+
+#ifdef MOCATRA_REGRESSION /* build for regression-test baseline         */
+#define CONF_OUTPUT_PATH "out/regression/baseline.ppm"
+#else /* build for regression-test run (compare)    */
+#define CONF_OUTPUT_PATH "out/regression/test.ppm"
+#endif
+
+#else /* normal build: take user configuration      */
+
+#define CONF_OUTPUT_PATH  USER_OUTPUT_PATH
+#define CONF_IMAGE_WIDTH  USER_IMAGE_WIDTH
+#define CONF_ASPECT_RATIO USER_ASPECT_RATIO
+#define CONF_SPP          USER_SPP
+#define CONF_RAY_DEPTH    USER_RAY_DEPTH
+#define CONF_SEED         USER_SEED
+
+#endif
+
+#define CONF_MAX_DIMENSIONS 2073600
+
+static inline int conf_image_height(int width, float ratio)
+{
+        float h;
+
+        if (width < 1 || width > CONF_MAX_DIMENSIONS || !(ratio > 0.0f)) {
+                return 0;
+        }
+
+        h = (float)width / (float)ratio;
+        if (h > CONF_MAX_DIMENSIONS) {
+                return 0;
+        }
+
+        return (h < 1.0) ? 1 : (int)h;
+}
+
+static inline mocatra_conf_t load_config(void)
+{
+        return (mocatra_conf_t){
+                .img_path   = CONF_OUTPUT_PATH,
+                .img_ratio  = CONF_ASPECT_RATIO,
+                .img_width  = CONF_IMAGE_WIDTH,
+                .img_height = conf_image_height(CONF_IMAGE_WIDTH,
+                                                CONF_ASPECT_RATIO),
+                .spp        = CONF_SPP,
+                .ray_depth  = CONF_RAY_DEPTH,
+                .seed       = CONF_SEED,
+        };
+}
+
+static inline bool config_valid(const mocatra_conf_t* c)
+{
+        if (c == NULL || c->img_path == NULL || c->img_height < 1 || c->spp < 1
+            || c->ray_depth < 1) {
+                return false;
+        }
+
+        return true;
+}
+
+#endif /* MOCATRA_CONFIG_H */

@@ -1,0 +1,122 @@
+/**
+ * \file        renderer.c
+ */
+
+#include "render/renderer.h"
+
+#include <stdbool.h>
+
+#define PROGRESS_BAR_WIDTH 50
+
+static void
+render_print_progress(uint32_t rows_done, uint32_t rows_total)
+{
+        float frac;
+        int   filled;
+
+        frac   = (float)rows_done / (float)rows_total;
+        filled = (int)(PROGRESS_BAR_WIDTH * frac);
+
+        printf("\rRendering: [");
+        for (int i = 0; i < PROGRESS_BAR_WIDTH; i++) {
+                if (i < filled) {
+                        printf("=");
+                } else if (i == filled) {
+                        printf(">");
+                } else {
+                        printf(" ");
+                }
+        }
+        printf("] %3d%%", (int)(frac * 100));
+        fflush(stdout);
+}
+
+static bool
+render_settings_valid(const render_settings_t* settings)
+{
+        return settings != NULL && settings->sample_per_px > 0
+               && settings->max_depth > 0
+               && (settings->sampler == NULL
+                   || (settings->sampler->sample_pixel_offset != NULL
+                       && settings->sampler->sample_unit_vector != NULL))
+               && (settings->integrator == NULL
+                   || settings->integrator->integrate != NULL);
+}
+
+mocatra_error_t
+render(image_t* img, const camera_t* cam, const hittable_list_t* world,
+       const render_settings_t* settings)
+{
+        float               pixel_samples_scale;
+        const sampler_t*    sampler;
+        const integrator_t* integrator;
+        sampler_rng_t       default_sampler_state;
+        sampler_t           default_sampler;
+
+        if (img == NULL || cam == NULL || world == NULL) {
+                return MOCATRA_INVARG;
+        }
+
+        if (!render_settings_valid(settings)) {
+                return MOCATRA_INVSETTINGS;
+        }
+
+        sampler = settings->sampler;
+        if (sampler == NULL) {
+                sampler_init_default(&default_sampler, &default_sampler_state,
+                                     1u);
+                sampler = &default_sampler;
+        }
+        integrator = settings->integrator == NULL ? integrator_path_tracing()
+                                                  : settings->integrator;
+        pixel_samples_scale = 1.0f / (float)settings->sample_per_px;
+
+        for (uint32_t y = 0; y < img->height; y++) {
+                for (uint32_t x = 0; x < img->width; x++) {
+                        vec3_t  accumulated_color;
+                        pixel_t px;
+
+                        accumulated_color = (vec3_t){
+                                .x = 0.0f,
+                                .y = 0.0f,
+                                .z = 0.0f,
+                        };
+
+                        for (int s = 0; s < settings->sample_per_px; s++) {
+                                vec3_t offset;
+                                vec3_t sample_col;
+                                ray_t  ray;
+
+                                offset = sampler_sample_pixel_offset(
+                                        sampler, x, y, (uint32_t)s,
+                                        (uint32_t)settings->sample_per_px);
+                                ray = camera_get_ray(cam, x, y, offset);
+
+                                sample_col = integrator->integrate(
+                                        ray, settings->max_depth,
+                                        (const hittable_t*)world, sampler);
+                                accumulated_color = vec3_add(accumulated_color,
+                                                             sample_col);
+                        }
+
+                        accumulated_color = vec3_scal(accumulated_color,
+                                                      pixel_samples_scale);
+
+                        px = (pixel_t){
+                                .r = linear_to_gamma(accumulated_color.x),
+                                .g = linear_to_gamma(accumulated_color.y),
+                                .b = linear_to_gamma(accumulated_color.z),
+                        };
+
+                        if (image_px_set(img, x, y, px) != MOCATRA_OK) {
+                                printf("[ERROR] Failed setting pixel value.\n");
+                                return MOCATRA_ERROR;
+                        }
+                }
+
+                /* progress indicator */
+                render_print_progress(y + 1, img->height);
+        }
+
+        return MOCATRA_OK;
+}

@@ -1,16 +1,13 @@
 /**
- *
- *  \file   image.h
- *  \brief  Utility for writing PPM Images.
- *
+ *  \file       image.h
+ *  \brief      Utility for writing Image files in PPM format.
  */
 
 #ifndef _IMAGE_H
 #define _IMAGE_H
 
-#include "mocatra_error.h"
+#include "mocatra.h"
 
-#include <stddef.h>
 #include <stdint.h>
 
 typedef struct pixel {
@@ -25,15 +22,12 @@ typedef struct image {
         uint32_t height;
 } image_t;
 
-image_t* image_create(uint32_t width, uint32_t height);
+image_t* image_create(uint32_t width, uint32_t aspect_ratio);
 void     image_destroy(image_t* img);
 
 pixel_t*        image_px_get(image_t* img, uint32_t x, uint32_t y);
 mocatra_error_t image_px_set(image_t* img, uint32_t x, uint32_t y, pixel_t px);
 
-size_t image_size(const image_t* img);
-size_t image_bufsize(const image_t* img);
-
-mocatra_error_t image_write_ppm(image_t* img, const char* path);
+mocatra_error_t image_write_ppm(const image_t* img, const char* path);
 
 #endif /* _IMAGE_H */

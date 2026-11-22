@@ -4,25 +4,27 @@
 
 #include "hittable_list.h"
 
-#include "mocatra_error.h"
+#include "mocatra.h"
 
-static uint8_t
+#include <stdbool.h>
+
+static bool
 hittable_list_hit(const hittable_t* self, const ray_t r, float t_min,
                   float t_max, hit_record_t* rec)
 {
         hittable_list_t* list;
         hit_record_t     temp_rec;
-        uint8_t          hit_anything;
+        bool             hit_anything;
         float            closest_so_far;
 
         list           = (hittable_list_t*)self;
-        hit_anything   = 0;
+        hit_anything   = false;
         closest_so_far = t_max;
 
         for (int i = 0; i < list->size; i++) {
                 if (list->objects[i]->vtable->hit(list->objects[i], r, t_min,
                                                   closest_so_far, &temp_rec)) {
-                        hit_anything   = 1;
+                        hit_anything   = true;
                         closest_so_far = temp_rec.t;
                         *rec           = temp_rec;
                 }
@@ -67,9 +69,14 @@ mocatra_error_t
 hittable_list_add(hittable_list_t* list, hittable_t* object)
 {
         if (list->size == list->capacity) {
+                hittable_t** new_objects;
                 list->capacity *= 2;
-                list->objects = realloc(list->objects,
-                                        sizeof(hittable_t*) * list->capacity);
+                new_objects = realloc(list->objects,
+                                      sizeof(hittable_t*) * list->capacity);
+                if (new_objects == NULL) {
+                        return MOCATRA_NOMEM;
+                }
+                list->objects = new_objects;
         }
         list->objects[list->size++] = object;
 

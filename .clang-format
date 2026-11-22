@@ -1,7 +1,8 @@
-# basis for format: github.com/MaJerle/c-code-style
-# with slight adaptations to match preferences
+# ==============================================================================
+# Unified .clang-format for Mocatra Path Tracer
+# ==============================================================================
 
----
+BasedOnStyle: LLVM
 AccessModifierOffset: -2
 AlignAfterOpenBracket: true
 AlignArrayOfStructures: None
@@ -18,7 +19,7 @@ AlignConsecutiveDeclarations: true
 AlignEscapedNewlines: Right
 AlignOperands: Align
 SortIncludes: true
-InsertBraces: true # Control statements must have curly brackets
+InsertBraces: true
 AlignTrailingComments: true
 AllowAllArgumentsOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: true
@@ -30,7 +31,7 @@ AllowShortLambdasOnASingleLine: All
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterDefinitionReturnType: None
-AlwaysBreakAfterReturnType: AllDefinitions
+AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: Yes
 AttributeMacros:
@@ -80,7 +81,6 @@ EmptyLineAfterAccessModifier: Never
 EmptyLineBeforeAccessModifier: LogicalBlock
 ExperimentalAutoDetectBinPacking: false
 PackConstructorInitializers: BinPack
-BasedOnStyle: ""
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
 AllowAllConstructorInitializersOnNextLine: true
 FixNamespaceComments: true
@@ -131,7 +131,7 @@ PenaltyBreakOpenParenthesis: 0
 PenaltyBreakString: 10
 PenaltyBreakTemplateDeclaration: 10
 PenaltyExcessCharacter: 100
-PenaltyReturnTypeOnItsOwnLine: 5
+PenaltyReturnTypeOnItsOwnLine: 200
 PenaltyIndentedWhitespace: 0
 PointerAlignment: Left
 PPIndentWidth: -1
@@ -190,6 +190,3 @@ WhitespaceSensitiveMacros:
 SpaceBeforeCpp11BracedList: false
 SpaceBeforeCtorInitializerColon: true
 SpaceBeforeInheritanceColon: true
----
-
-
