@@ -50,6 +50,8 @@ render(image_t* img, const camera_t* cam, const hittable_list_t* world,
         float               pixel_samples_scale;
         const sampler_t*    sampler;
         const integrator_t* integrator;
+        sampler_rng_t       default_sampler_state;
+        sampler_t           default_sampler;
 
         if (img == NULL || cam == NULL || world == NULL) {
                 return MOCATRA_INVARG;
@@ -59,8 +61,12 @@ render(image_t* img, const camera_t* cam, const hittable_list_t* world,
                 return MOCATRA_INVSETTINGS;
         }
 
-        sampler    = settings->sampler == NULL ? sampler_default()
-                                               : settings->sampler;
+        sampler = settings->sampler;
+        if (sampler == NULL) {
+                sampler_init_default(&default_sampler, &default_sampler_state,
+                                     1u);
+                sampler = &default_sampler;
+        }
         integrator = settings->integrator == NULL ? integrator_path_tracing()
                                                   : settings->integrator;
         pixel_samples_scale = 1.0f / (float)settings->sample_per_px;
@@ -79,22 +85,12 @@ render(image_t* img, const camera_t* cam, const hittable_list_t* world,
                         for (int s = 0; s < settings->sample_per_px; s++) {
                                 vec3_t offset;
                                 vec3_t sample_col;
-                                vec3_t sample_pixel_loc;
                                 ray_t  ray;
 
-                                offset = sampler_sample_pixel_offset(sampler);
-                                sample_pixel_loc = vec3_add(
-                                        cam->px_origin,
-                                        vec3_add(vec3_scal(cam->px_delta_u,
-                                                           (float)x + offset.x),
-                                                 vec3_scal(
-                                                         cam->px_delta_v,
-                                                         (float)y + offset.y)));
-                                ray = (ray_t){
-                                        .orig = cam->center,
-                                        .dir  = vec3_sub(sample_pixel_loc,
-                                                         cam->center),
-                                };
+                                offset = sampler_sample_pixel_offset(
+                                        sampler, x, y, (uint32_t)s,
+                                        (uint32_t)settings->sample_per_px);
+                                ray = camera_get_ray(cam, x, y, offset);
 
                                 sample_col = integrator->integrate(
                                         ray, settings->max_depth,

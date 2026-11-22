@@ -9,11 +9,11 @@
 #include "scene/world.h"
 
 #include "render/renderer.h"
+#include "sampler/sampler.h"
 
 #include "io/image.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
 
 int
@@ -25,6 +25,8 @@ mocatra_main(void)
 
         render_settings_t settings;
         mocatra_error_t   render_err;
+        sampler_rng_t     sampler_state;
+        sampler_t         sampler;
 
         mocatra_conf_t conf;
 
@@ -45,7 +47,9 @@ mocatra_main(void)
 
         /* Random generator seeding */
 
-        srand(conf.seed == 0u ? (unsigned int)time(NULL) : conf.seed);
+        sampler_init_default(&sampler, &sampler_state,
+                             conf.seed == 0u ? (uint64_t)time(NULL)
+                                             : (uint64_t)conf.seed);
 
         /* ------------------------ */
 
@@ -85,6 +89,7 @@ mocatra_main(void)
         settings = (render_settings_t){
                 .sample_per_px = conf.spp,
                 .max_depth     = conf.ray_depth,
+                .sampler       = &sampler,
         };
         render_err = render(img, &cam, world, &settings);
         if (render_err != MOCATRA_OK) {

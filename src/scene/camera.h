@@ -28,6 +28,7 @@ typedef struct camera {
 camera_config_t camera_config_default(void);
 camera_t camera_init(const camera_config_t* cfg, int img_width, int img_height);
 
-ray_t camera_get_ray(const camera_t* cam, uint32_t x, uint32_t y);
+ray_t camera_get_ray(const camera_t* cam, uint32_t x, uint32_t y,
+                     vec3_t pixel_offset);
 
 #endif /* _CAMERA_H */

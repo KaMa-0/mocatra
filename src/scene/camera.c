@@ -5,7 +5,6 @@
 #include "scene/camera.h"
 
 #include "mocatra.h"
-#include "sampler/sampler.h"
 
 camera_config_t
 camera_config_default(void)
@@ -53,15 +52,15 @@ camera_init(const camera_config_t* cfg, int img_width, int img_height)
 }
 
 ray_t
-camera_get_ray(const camera_t* cam, uint32_t x, uint32_t y)
+camera_get_ray(const camera_t* cam, uint32_t x, uint32_t y, vec3_t pixel_offset)
 {
-        vec3_t offset, sample;
+        vec3_t sample;
 
-        offset = sampler_sample_pixel_offset(sampler_default());
         sample = vec3_add(
                 cam->px_origin,
-                vec3_add(vec3_scal(cam->px_delta_u, (float)x + offset.x),
-                         vec3_scal(cam->px_delta_v, (float)y + offset.y)));
+                vec3_add(vec3_scal(cam->px_delta_u, (float)x + pixel_offset.x),
+                         vec3_scal(cam->px_delta_v,
+                                   (float)y + pixel_offset.y)));
 
         return (ray_t){
                 .orig = cam->center,
